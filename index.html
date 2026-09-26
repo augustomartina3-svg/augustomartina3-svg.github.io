@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Martina Augusto — Diseño gráfico</title>
+  <meta name="description" content="Portfolio de Martina Augusto, estudiante de Diseño Gráfico en la UBA: identidad, ilustración, tipografía y motion.">
+  <meta name="theme-color" content="#ececef">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Martina Augusto — Diseño gráfico">
+  <meta property="og:description" content="Identidad, ilustración, tipografía y motion.">
+  <meta property="og:image" content="img/ui/og.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='16' fill='%231a00ff'/%3E%3Ccircle cx='22' cy='10' r='5' fill='%23b4ff1a'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://use.typekit.net/our7phw.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Nothing+You+Could+Do&display=swap" rel="stylesheet">
+  <link rel="preload" href="fonts/MrsSheppards-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="booting">
+  <div class="loadbar" id="loadbar" aria-hidden="true"></div>
+  <h1 class="sr">Martina Augusto — Portfolio de diseño gráfico</h1>
+
+  <!-- 1 · Entrada: el HOLA se escribe con un pincel; un click pinta la pantalla y pasa a las carpetas -->
+  <section id="intro" class="intro" aria-label="Bienvenida">
+    <div class="emo-layer" id="introEmo" aria-hidden="true"></div>
+    <p class="enter" id="enter" aria-hidden="true">Hacé click para entrar<span class="enter-sub">o agarrá las letras</span></p>
+    <button class="hola-btn" id="bigFile" aria-label="Entrar al portfolio"><canvas id="holaCv" aria-hidden="true"></canvas></button>
+  </section>
+
+  <!-- 2 · Home: tres carpetas -->
+  <main id="home" class="home">
+    <span class="corner tl">Martina Augusto</span>
+    <span class="corner tr">Portfolio ’26</span>
+    <div class="stage">
+      <a href="#trabajos" class="pf f1" data-open="projects" data-kind="silver" data-label="Trabajos" aria-label="Trabajos" style="--rot:-2deg;--dr:2deg;--dx:6px;--dy:-9px;--dur:8s">
+        <span class="pops" aria-hidden="true"><img src="img/sobre-mi/emoji-star.svg" alt=""><img src="img/sobre-mi/emoji-sparkle.svg" alt=""><img src="img/sobre-mi/emoji-bolt.svg" alt=""></span>
+      </a>
+      <a href="#sobre-mi" class="pf f2" data-open="about" data-kind="blue" data-label="Sobre mí" aria-label="Sobre mí" style="--rot:2deg;--dr:-2deg;--dx:-7px;--dy:8px;--dur:9.5s">
+        <span class="pops" aria-hidden="true"><img src="img/sobre-mi/emoji-book.svg" alt=""><img src="img/sobre-mi/emoji-heart-black.svg" alt=""><img src="img/sobre-mi/emoji-smile.svg" alt=""><img src="img/sobre-mi/emoji-cool.svg" alt=""></span>
+      </a>
+      <a href="https://www.linkedin.com/in/martinaaugusto19/" target="_blank" rel="noopener" class="pf f3" data-kind="orange" data-label="LinkedIn" aria-label="LinkedIn (se abre en otra pestaña)" style="--rot:-1deg;--dr:1.5deg;--dx:5px;--dy:9px;--dur:7.2s">
+        <span class="pops" aria-hidden="true"><img src="img/sobre-mi/emoji-sparkle.svg" alt=""><img src="img/sobre-mi/emoji-bolt.svg" alt=""></span>
+      </a>
+      <a href="https://www.behance.net/martinaaugusto1" target="_blank" rel="noopener" class="pf f4" data-kind="behance" data-label="Behance" aria-label="Behance (se abre en otra pestaña)" style="--rot:1.5deg;--dr:-1.5deg;--dx:-5px;--dy:8px;--dur:8.6s">
+        <span class="pops" aria-hidden="true"><img src="img/sobre-mi/emoji-star.svg" alt=""><img src="img/sobre-mi/emoji-heart-black.svg" alt=""><img src="img/sobre-mi/emoji-smile.svg" alt=""></span>
+      </a>
+    </div>    <p class="homehint" id="homeHint">Tocá una carpeta</p>
+    <a class="corner br" href="mailto:augustomartina3@gmail.com">augustomartina3@gmail.com</a>
+    <span class="corner bl"><span>Diseño gráfico</span><span>FADU · UBA</span><span>© 2026</span></span>
+  </main>
+
+  <!-- 3 · Trabajos: el scroll pinta cada portada con bandas de pincel -->
+  <section id="projects" class="panel" role="dialog" aria-label="Trabajos" aria-hidden="true">
+    <header class="phead">
+      <h2 class="ptitle" id="ptitle-work">Trabajos</h2>
+      <nav class="filters" id="filters" aria-label="Filtrar proyectos"></nav>
+      <span class="pcount" id="pcount" aria-live="polite"></span>
+      <button class="close" data-close aria-label="Cerrar">×</button>
+    </header>
+    <span class="pmicro" aria-hidden="true"><span>Diseño gráfico</span><span>FADU · UBA</span><span>© 2026</span></span>
+    <div class="emo-layer" id="workEmo" aria-hidden="true"></div>
+    <div class="pscroll" id="pscroll">
+      <div class="pstage" id="pstage">
+        <div class="sticky" id="sticky">
+          <div class="index-wrap"><ol class="index" id="index"></ol></div>
+          <div class="cover-wrap">
+            <button class="cover" id="cover" aria-label="Ver proyecto"></button>
+            <div class="deck" id="deck" hidden></div>
+          </div>
+          <div class="meta" id="meta">
+            <p class="meta-tags" id="metaTags"></p>
+            <button class="cta" id="cta">Ver proyecto <span aria-hidden="true">→</span></button>
+          </div>
+          <p class="scrollhint" id="scrollhint" aria-hidden="true">Scrolleá</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · Sobre mí -->
+  <section id="about" class="panel" role="dialog" aria-label="Sobre mí" aria-hidden="true">
+    <header class="phead">
+      <h2 class="ptitle" id="ptitle-about">Sobre mí</h2>
+      <span class="pcount"></span>
+      <button class="close" data-close aria-label="Cerrar">×</button>
+    </header>
+    <span class="pmicro" aria-hidden="true"><span>Diseño gráfico</span><span>FADU · UBA</span><span>© 2026</span></span>
+    <div class="about">
+      <div class="about-text">
+        <p data-paint>Estudio Diseño Gráfico en la UBA desde 2022. <b class="hl">Disfruto mucho de crear, experimentar y reeditar</b> en el proceso de diseño. Por si no se nota, mi materia favorita fue Morfología.</p>
+        <p data-paint>Tengo experiencia como social media y community manager, sobre todo en Instagram, y también trabajo como freelance.</p>
+        <p data-paint>Me atrae el branding y los proyectos conceptuales con muchas piezas, donde se juega con constantes y variables.</p>
+        <p data-paint>Me gusta aprender en equipo, y trabajar con una marca de deporte sería mi proyecto ideal.</p>
+        <p class="about-mail" data-paint><a href="mailto:augustomartina3@gmail.com">augustomartina3@gmail.com</a> – <a href="tel:+541135851531">11 3585 1531</a> – <a href="https://www.behance.net/martinaaugusto1" target="_blank" rel="noopener">Behance</a></p>
+      </div>
+      <div class="play" id="play" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <!-- 5 · Vista de proyecto -->
+  <section id="pview" class="pview" role="dialog" aria-label="Proyecto" aria-hidden="true">
+    <header class="pv-top">
+      <div><h3 class="pv-title" id="pvTitle"></h3><p class="pv-tags" id="pvTags"></p></div>
+      <button class="close" id="pvClose" aria-label="Cerrar proyecto">×</button>
+    </header>
+    <div class="track" id="track" tabindex="0"></div>
+    <button class="pnav prev" id="pvPrev" aria-label="Anterior">←</button>
+    <button class="pnav next" id="pvNext" aria-label="Siguiente">→</button>
+    <footer class="pv-foot"><span id="pvN">1 / 1</span><div class="pbar"><i id="pvFill"></i></div></footer>
+  </section>
+
+  <div class="cursor-halo" id="cursorHalo" aria-hidden="true"></div>
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <noscript><p style="position:fixed;inset:auto 0 24px;text-align:center;font:14px Inter,system-ui,sans-serif">Este portfolio necesita JavaScript. Escribime a augustomartina3@gmail.com</p></noscript>
+  <script src="projects.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
