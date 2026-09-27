@@ -800,6 +800,16 @@ body.azul .intro { background: #1700fe; }
 /* las palabritas del papelito (nombre de la carpeta): fundido fino con leve desenfoque, sin caida ni rebote */
 @keyframes letterFade { from { translate: 0 8px; opacity: 0; filter: blur(3px); } 60% { filter: blur(0); } to { translate: 0 0; opacity: 1; filter: blur(0); } }
 .home.show .fslip .l { animation: letterFade .7s var(--ease) both; animation-delay: calc(var(--base) + var(--i) * 50ms); }
+/* "Cargando" minimalista antes de que se escriba el HOLA: se desvanece apenas empieza a escribirse */
+.loading {
+  position: absolute; left: 50%; top: 50%; translate: -50% -50%; margin: 0; z-index: 1;
+  color: rgba(255, 255, 255, .68); font: 500 11px/1 var(--font); letter-spacing: .22em; text-transform: uppercase;
+  opacity: 1; transition: opacity .6s var(--ease);
+}
+.intro.writing .loading { opacity: 0; }
+.loading .dots { display: inline-block; width: 1.4em; text-align: left; }
+.loading .dots::before { content: ''; animation: loadingDotsText 1.1s steps(4) infinite; }
+@keyframes loadingDotsText { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
 /* el Hola sin gravedad: aparece quieto en su lugar (se escribe ahi mismo) */
 #holaCv, .intro.ready #holaCv { animation: none; }
 /* cuarta carpeta: Behance (naranja) */

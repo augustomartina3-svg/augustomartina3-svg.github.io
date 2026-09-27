@@ -235,7 +235,7 @@ document.addEventListener('pointermove', (e) => {
     W = Math.round(innerWidth * dpr); H = Math.round(innerHeight * dpr);
     cv.width = W; cv.height = H;
     ctx.font = `100px ${FONT}`;
-    const m = ctx.measureText(TEXT), target = Math.min(W * 0.84, H * 1.5);
+    const m = ctx.measureText(TEXT), target = Math.min(W * 0.5, H * 0.9);
     size = 100 * target / m.width;
     ctx.font = `${size}px ${FONT}`;
     const mm = ctx.measureText(TEXT);
@@ -411,7 +411,7 @@ document.addEventListener('pointermove', (e) => {
     if (phase === 'slide') return;
     lean();
     const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
-    if (phase === 'wait') { if (now >= startAt) phase = 'write'; }
+    if (phase === 'wait') { if (now >= startAt) { phase = 'write'; intro.classList.add('writing'); } }
     else if (phase === 'write') { tt += dt * speed; draw(Math.min(tt, T_END)); if (tt >= T_END) { phase = 'hold'; holdT = 0; intro.classList.add('ready'); } }
     else if (phase === 'hold') { stepLetters(dt); drawLetters(); sheen(); }
     else if (phase === 'unwrite') { tt -= dt * speed * 1.7; draw(Math.max(tt, 0)); if (tt <= 0) { phase = 'slide'; slide(); return; } }
