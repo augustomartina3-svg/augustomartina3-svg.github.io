@@ -375,6 +375,9 @@ document.addEventListener('pointermove', (e) => {
   function thud() { const n = performance.now(); if (n - thudAt < 260) return; thudAt = n; cv.animate([{ translate: '0 0' }, { translate: '0 5px' }, { translate: '0 0' }], { duration: 240, easing: 'ease-out' }); }
   function drawLetters() {
     ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, W, H);
+    // en reposo (nadie la toco, o ya volvieron todas) se dibuja el HOLA entero y sin costuras;
+    // recien cuando se agarra o vuela alguna letra se arma con los recortes individuales
+    if (letters.every((L) => L.st === 'home')) { ctx.drawImage(fin, 0, 0); return; }
     letters.filter((L) => L !== grab).concat(grab ? [grab] : []).forEach((L) => { ctx.save(); ctx.translate(L.x + L.w / 2, L.y + L.h / 2); ctx.rotate(L.rot); ctx.drawImage(L.c, -L.w / 2, -L.h / 2); ctx.restore(); });
   }
   function hitLetter(cx, cy) {
