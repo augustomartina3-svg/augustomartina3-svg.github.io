@@ -231,7 +231,7 @@ document.addEventListener('pointermove', (e) => {
   const clamp01 = (v) => clamp(v, 0, 1);
 
   function layout() {
-    dpr = Math.min(2, window.devicePixelRatio || 1);
+    dpr = Math.min(1.5, window.devicePixelRatio || 1);
     W = Math.round(innerWidth * dpr); H = Math.round(innerHeight * dpr);
     cv.width = W; cv.height = H;
     ctx.font = `100px ${FONT}`;
@@ -311,11 +311,12 @@ document.addEventListener('pointermove', (e) => {
     ctx.save(); ctx.globalCompositeOperation = 'source-atop';
     let g = ctx.createRadialGradient(x, y, 0, x, y, r);
     g.addColorStop(0, `hsla(${hue},90%,90%,${a + .12})`); g.addColorStop(.35, `hsla(${hue + 20},85%,78%,${a * .7})`); g.addColorStop(1, `hsla(${hue + 40},80%,70%,0)`);
-    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    const bx0 = baseX - size * .2, by0 = baseY - size * 1.05, bw = size * 3, bh = size * 1.6;
+    ctx.fillStyle = g; ctx.fillRect(bx0, by0, bw, bh);
     const ang = Math.atan2(shY - .5, shX - .5) + 1.2, dx = Math.cos(ang) * size * .5, dy = Math.sin(ang) * size * .5;
     g = ctx.createLinearGradient(x - dx, y - dy, x + dx, y + dy);
     g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(.5, `hsla(${hue + 20},100%,96%,${.07 + spd * .25})`); g.addColorStop(1, 'rgba(255,255,255,0)');
-    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = g; ctx.fillRect(bx0, by0, bw, bh);
     ctx.restore();
   }
 
@@ -335,21 +336,43 @@ document.addEventListener('pointermove', (e) => {
     });
   }
   function stepLetters(dt) {
-    const gr = H * 2.4;
+    const gr = H * 1.7;
     letters.forEach((L) => {
       if (L.st === 'drag' || L.st === 'home') return;
       if (L.st === 'fly') {
         L.vy += gr * dt; L.x += L.vx * dt; L.y += L.vy * dt; L.rot += L.vr * dt;
-        if (L.y + L.h > H) { L.y = H - L.h; if (Math.abs(L.vy) < H * .25) { L.st = 'rest'; L.rest = 0; L.vy = L.vx = L.vr = 0; } else { L.vy *= -.45; L.vx *= .82; L.vr *= .6; } }
-        if (L.x < 0) { L.x = 0; L.vx = Math.abs(L.vx) * .6; } else if (L.x + L.w > W) { L.x = W - L.w; L.vx = -Math.abs(L.vx) * .6; }
-      } else if (L.st === 'rest') { L.rest += dt; if (L.rest > 1.8) L.st = 'back'; }
+        if (L.y + L.h > H) {
+          if (L.vy > H * .55) thud();
+          L.y = H - L.h; if (Math.abs(L.vy) < H * .22) { L.st = 'rest'; L.rest = 0; L.vy = L.vx = L.vr = 0; } else { L.vy *= -.55; L.vx *= .86; L.vr *= .7; }
+        }
+        if (L.x < 0) { L.x = 0; L.vx = Math.abs(L.vx) * .7; } else if (L.x + L.w > W) { L.x = W - L.w; L.vx = -Math.abs(L.vx) * .7; }
+      } else if (L.st === 'rest') { L.rest += dt; if (L.rest > 5) L.st = 'back'; }
       else if (L.st === 'back') {
-        const k = 1 - Math.exp(-5 * dt), tr = Math.round(L.rot / 6.2832) * 6.2832;
+        const k = 1 - Math.exp(-2.4 * dt), tr = Math.round(L.rot / 6.2832) * 6.2832;
         L.x += (L.hx - L.x) * k; L.y += (L.hy - L.y) * k; L.rot += (tr - L.rot) * k;
         if (Math.abs(L.hx - L.x) + Math.abs(L.hy - L.y) < 1.5 && Math.abs(tr - L.rot) < .01) { L.x = L.hx; L.y = L.hy; L.rot = 0; L.st = 'home'; }
       }
     });
+    // las letras chocan entre si: una que vuela despierta a las que estan quietas y las empuja
+    for (let i = 0; i < letters.length; i++) for (let j = i + 1; j < letters.length; j++) {
+      const A = letters[i], B = letters[j];
+      if (A.st === 'back' || B.st === 'back' || (A.st === 'home' && B.st === 'home')) continue;
+      const ax = A.x + A.w / 2, ay = A.y + A.h / 2, bx = B.x + B.w / 2, by = B.y + B.h / 2, dx = bx - ax, dy = by - ay, d = Math.hypot(dx, dy) || 1;
+      const min = Math.min(A.w, A.h) * .4 + Math.min(B.w, B.h) * .4; if (d >= min) continue;
+      const nx = dx / d, ny = dy / d, ov = min - d;
+      const av = A.st === 'drag' ? [A.dvx || 0, A.dvy || 0] : [A.vx, A.vy], bv = B.st === 'drag' ? [B.dvx || 0, B.dvy || 0] : [B.vx, B.vy];
+      const rv = (bv[0] - av[0]) * nx + (bv[1] - av[1]) * ny; if (rv > 0 && ov < 2) continue;
+      [A, B].forEach((L) => { if (L.st === 'home' || L.st === 'rest') { L.st = 'fly'; } });
+      const fixA = A.st === 'drag', fixB = B.st === 'drag';
+      if (!fixA && !fixB) { A.x -= nx * ov / 2; A.y -= ny * ov / 2; B.x += nx * ov / 2; B.y += ny * ov / 2; }
+      else if (fixA) { B.x += nx * ov; B.y += ny * ov; } else { A.x -= nx * ov; A.y -= ny * ov; }
+      const imp = Math.max(0, -rv) * 1.5 + 60;
+      if (!fixA) { A.vx -= nx * imp * (fixB ? 1.6 : .8); A.vy -= ny * imp * (fixB ? 1.6 : .8); A.vr -= nx * .8; }
+      if (!fixB) { B.vx += nx * imp * (fixA ? 1.6 : .8); B.vy += ny * imp * (fixA ? 1.6 : .8); B.vr += nx * .8; }
+    }
   }
+  let thudAt = 0;
+  function thud() { const n = performance.now(); if (n - thudAt < 260) return; thudAt = n; cv.animate([{ translate: '0 0' }, { translate: '0 5px' }, { translate: '0 0' }], { duration: 240, easing: 'ease-out' }); }
   function drawLetters() {
     ctx.globalCompositeOperation = 'source-over'; ctx.clearRect(0, 0, W, H);
     letters.filter((L) => L !== grab).concat(grab ? [grab] : []).forEach((L) => { ctx.save(); ctx.translate(L.x + L.w / 2, L.y + L.h / 2); ctx.rotate(L.rot); ctx.drawImage(L.c, -L.w / 2, -L.h / 2); ctx.restore(); });
@@ -367,17 +390,19 @@ document.addEventListener('pointermove', (e) => {
   btn.addEventListener('pointerdown', (e) => {
     grabbed = false; if (phase !== 'hold') return;
     const L = hitLetter(e.clientX * dpr, e.clientY * dpr); if (!L) return;
-    grab = L; grabbed = true; L.st = 'drag'; L.gx = e.clientX * dpr - L.x; L.gy = e.clientY * dpr - L.y; trail.length = 0;
+    grab = L; grabbed = true; L.st = 'drag'; L.dvx = L.dvy = 0; L.gx = e.clientX * dpr - L.x; L.gy = e.clientY * dpr - L.y; trail.length = 0;
   });
   addEventListener('pointermove', (e) => {
     if (!grab) return; const X = e.clientX * dpr, Y = e.clientY * dpr;
     grab.x = clamp(X - grab.gx, 0, W - grab.w); grab.y = clamp(Y - grab.gy, 0, H - grab.h);
     trail.push([performance.now(), X, Y]); while (trail.length > 5) trail.shift();
+    const a = trail[0], b = trail[trail.length - 1];
+    if (b[0] - a[0] > 8) { grab.dvx = (b[1] - a[1]) / (b[0] - a[0]) * 1000; grab.dvy = (b[2] - a[2]) / (b[0] - a[0]) * 1000; }
   }, { passive: true });
   const letGo = () => {
     if (!grab) return; const L = grab; grab = null; const a = trail[0], b = trail[trail.length - 1]; let vx = 0, vy = 0;
     if (a && b && b[0] - a[0] > 8) { vx = (b[1] - a[1]) / (b[0] - a[0]) * 1000; vy = (b[2] - a[2]) / (b[0] - a[0]) * 1000; }
-    L.vx = vx; L.vy = vy; L.vr = vx / W * 6; L.st = 'fly';
+    L.dvx = L.dvy = 0; L.vx = vx * .8; L.vy = vy * .8; L.vr = vx / W * 4; L.st = 'fly';
   };
   addEventListener('pointerup', letGo); addEventListener('pointercancel', letGo);
   // secuencia sola: se escribe → pausa → se desescribe → scroll hacia el costado hasta las carpetas (sin click)
@@ -403,7 +428,7 @@ document.addEventListener('pointermove', (e) => {
     }, 1050);
   }  // el HOLA hace un zoom con un brillo perlado que lo cruza, vuelve a su tamaño y cae con gravedad
   function fall() {
-    const D = 2100, t0s = performance.now();
+    const D = 2700, t0s = performance.now();
     cv.style.animation = 'none';
     cv.animate([
       { transform: 'scale(1) translateY(0) rotate(0deg)', filter: 'blur(0)', opacity: 1, offset: 0, easing: 'cubic-bezier(.2,.7,.2,1)' },
@@ -425,7 +450,7 @@ document.addEventListener('pointermove', (e) => {
     };
     tick();
   }  // un click (o Enter) solo sirve para saltear la entrada
-  const skip = () => { if (phase === 'wait' || phase === 'write' || phase === 'hold') { phase = 'out'; intro.classList.remove('ready'); grab = null; drawLetters(); fall(); emoIntro.release(); setTimeout(() => { phase = 'slide'; slide(); }, 1900); } };
+  const skip = () => { if (phase === 'wait' || phase === 'write' || phase === 'hold') { phase = 'out'; intro.classList.remove('ready'); grab = null; drawLetters(); fall(); emoIntro.release(); setTimeout(() => { phase = 'slide'; slide(); }, 2500); } };
   btn.addEventListener('click', () => { if (grabbed) { grabbed = false; return; } skip(); });
   addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); skip(); } });
   let rt = 0;
@@ -950,14 +975,15 @@ const CursorGravity = (() => {
     items.forEach((it) => {
       const r = it.box.getBoundingClientRect(); if (!r.width) return;
       const inside = mx >= r.left - r.width * .2 && mx <= r.right + r.width * .2 && my >= r.top - r.height * .2 && my <= r.bottom + r.height * .2;
-      const tx = inside ? (mx - r.left) / r.width : .3 + Math.sin(performance.now() / 2600 + it.box.offsetLeft) * .12, ty = inside ? (my - r.top) / r.height : .2;
+      const tx = inside ? (mx - r.left) / r.width : .3, ty = inside ? (my - r.top) / r.height : .2;
       const ta = inside ? .55 + Math.min(.4, spd * .5) : .22;
+      if (Math.abs(tx - it.x) < .002 && Math.abs(ty - it.y) < .002 && Math.abs(ta - it.a) < .004) return;
       it.x += (tx - it.x) * .12; it.y += (ty - it.y) * .12; it.a += (ta - it.a) * .1;
       it.s.style.setProperty('--sx', (it.x * 100).toFixed(1) + '%'); it.s.style.setProperty('--sy', (it.y * 100).toFixed(1) + '%');
       it.s.style.setProperty('--sa', it.a.toFixed(3)); it.s.style.setProperty('--sh', Math.round(205 + it.x * 130));
-      if (Math.abs(tx - it.x) > .002 || Math.abs(ta - it.a) > .004 || !inside) moving = true;
+      moving = true;
     });
-    if (moving || items.some((it) => it.a > .01)) requestAnimationFrame(tick); else run = false;
+    if (moving) requestAnimationFrame(tick); else run = false;
   };
   addEventListener('pointermove', (e) => {
     spd = Math.min(1, spd + Math.hypot(e.clientX - lastX, e.clientY - lastY) / 400); lastX = mx = e.clientX; lastY = my = e.clientY;
