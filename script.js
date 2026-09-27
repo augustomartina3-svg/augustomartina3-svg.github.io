@@ -106,7 +106,8 @@ function EmojiPhys(layer, o = {}) {
     W = layer.clientWidth; H = layer.clientHeight;
     layer.innerHTML = ''; items = [];
     for (let i = 0; i < count; i++) {
-      const el = new Image(); el.src = EMOJIS[(i + (o.offset || 0)) % EMOJIS.length]; el.alt = ''; el.draggable = false;
+      const pool = o.pool || EMOJIS;
+      const el = new Image(); el.src = pool[(i + (o.offset || 0)) % pool.length]; el.alt = ''; el.draggable = false;
       const s = min + Math.random() * (max - min); el.style.width = s + 'px'; el.style.opacity = '0';
       layer.appendChild(el);
       items.push({ el, s, x: s + Math.random() * Math.max(1, W - 2 * s), y: -s * 2, vx: (Math.random() - 0.5) * 3, vy: 0, rot: Math.random() * 40 - 20, vr: (Math.random() - 0.5) * 5, t: delay + i * 260 });
@@ -336,7 +337,7 @@ document.addEventListener('pointermove', (e) => {
     });
   }
   function stepLetters(dt) {
-    const gr = H * 1.7;
+    const gr = H * 2.7;
     letters.forEach((L) => {
       if (L.st === 'drag' || L.st === 'home') return;
       if (L.st === 'fly') {
@@ -346,9 +347,9 @@ document.addEventListener('pointermove', (e) => {
           L.y = H - L.h; if (Math.abs(L.vy) < H * .22) { L.st = 'rest'; L.rest = 0; L.vy = L.vx = L.vr = 0; } else { L.vy *= -.55; L.vx *= .86; L.vr *= .7; }
         }
         if (L.x < 0) { L.x = 0; L.vx = Math.abs(L.vx) * .7; } else if (L.x + L.w > W) { L.x = W - L.w; L.vx = -Math.abs(L.vx) * .7; }
-      } else if (L.st === 'rest') { L.rest += dt; if (L.rest > 5) L.st = 'back'; }
+      } else if (L.st === 'rest') { L.rest += dt; if (L.rest > 1.2) L.st = 'back'; }
       else if (L.st === 'back') {
-        const k = 1 - Math.exp(-2.4 * dt), tr = Math.round(L.rot / 6.2832) * 6.2832;
+        const k = 1 - Math.exp(-3.4 * dt), tr = Math.round(L.rot / 6.2832) * 6.2832;
         L.x += (L.hx - L.x) * k; L.y += (L.hy - L.y) * k; L.rot += (tr - L.rot) * k;
         if (Math.abs(L.hx - L.x) + Math.abs(L.hy - L.y) < 1.5 && Math.abs(tr - L.rot) < .01) { L.x = L.hx; L.y = L.hy; L.rot = 0; L.st = 'home'; }
       }
@@ -459,7 +460,7 @@ document.addEventListener('pointermove', (e) => {
   let rt = 0;
   addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { if (phase === 'slide') return; layout(); draw(clamp(tt, 0, T_END)); }, 200); });
 
-  const emoIntro = EmojiPhys($('#introEmo'), { count: 5, min: 46, max: 78, delay: 1300, attract: true });
+  const emoIntro = EmojiPhys($('#introEmo'), { count: 5, min: 46, max: 78, delay: 1300, attract: true, pool: ['img/sobre-mi/emoji-smile.svg'] });
   let lx = 0, ly = 0, ptx = 0, pty = 0;
   addEventListener('pointermove', (e) => { ptx = (e.clientX / innerWidth - 0.5) * 2; pty = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
   const lean = () => { lx += (ptx - lx) * 0.06; ly += (pty - ly) * 0.06; cv.style.transform = `translate3d(${(lx * 14).toFixed(1)}px, ${(ly * 9).toFixed(1)}px, 0) rotate(${(lx * 0.8).toFixed(2)}deg)`; };
