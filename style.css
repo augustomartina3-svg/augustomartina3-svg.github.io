@@ -565,8 +565,7 @@ body:has(.intro:not(.leave)) .cursor-halo { background: radial-gradient(circle, 
 .home.show .pf { animation: settleSubtle .9s var(--ease) backwards, drift var(--dur) ease-in-out infinite alternate; }
 .home.show .pf.f1 { animation-delay: .15s, 1.1s; } .home.show .pf.f2 { animation-delay: .34s, 1.3s; } .home.show .pf.f3 { animation-delay: .53s, 1.5s; }
 .home.show .pf.f4 { animation-delay: .72s, 1.7s; }
-body.wall .home.show .pf.f1 { animation-delay: .15s; } body.wall .home.show .pf.f2 { animation-delay: .34s; } body.wall .home.show .pf.f3 { animation-delay: .53s; } body.wall .home.show .pf.f4 { animation-delay: .72s; }
-.cover::before, .card::before { display: none; }
+body.wall .home.show .pf.f1 { animation-delay: .15s; } body.wall .home.show .pf.f2 { animation-delay: .34s; } body.wall .home.show .pf.f3 { animation-delay: .53s; } body.wall .home.show .pf.f4 { animation-delay: .72s; }.cover::before, .card::before { display: none; }
 .pbar i { box-shadow: none; background: var(--blue); }
 .loadbar { background: var(--blue); }
 
@@ -798,6 +797,9 @@ body.wall .pf::after {
 body.azul .intro { background: #1700fe; }
 .enter-sub { display: block; margin-top: 10px; font-size: 10px; letter-spacing: .16em; opacity: .6; }
 .hola-btn { touch-action: none; }
+/* las palabritas del papelito (nombre de la carpeta): fundido fino con leve desenfoque, sin caida ni rebote */
+@keyframes letterFade { from { translate: 0 8px; opacity: 0; filter: blur(3px); } 60% { filter: blur(0); } to { translate: 0 0; opacity: 1; filter: blur(0); } }
+.home.show .fslip .l { animation: letterFade .7s var(--ease) both; animation-delay: calc(var(--base) + var(--i) * 50ms); }
 /* el Hola sin gravedad: aparece quieto en su lugar (se escribe ahi mismo) */
 #holaCv, .intro.ready #holaCv { animation: none; }
 /* cuarta carpeta: Behance (naranja) */
