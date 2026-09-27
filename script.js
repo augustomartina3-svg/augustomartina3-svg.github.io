@@ -787,10 +787,13 @@ const Viewer = (() => {
       slides.push(s);
     }
     (pr.slides || []).forEach((src, i) => {
-      const s = document.createElement('div'); s.className = 'slide';
+      const isGif = /\.gif($|\?)/i.test(src);
+      const s = document.createElement('div'); s.className = isGif ? 'slide gif' : 'slide';
       const sk = document.createElement('i'); sk.className = 'sk';
       const im = new Image(); im.alt = `${pr.title} — ${i + 1}`; im.decoding = 'async'; im.dataset.src = src;
-      s.append(sk, im); slides.push(s);
+      s.append(sk, im);
+      if (isGif) { const b = document.createElement('span'); b.className = 'gif-badge'; b.textContent = '.GIF'; s.append(b); }
+      slides.push(s);
     });
     n = slides.length;
     slides.forEach((s) => { track.appendChild(s); loader.observe(s); seen.observe(s); });
