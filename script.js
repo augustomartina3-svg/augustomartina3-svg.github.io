@@ -385,11 +385,14 @@ document.addEventListener('pointermove', (e) => {
           L.y = H - L.h; if (Math.abs(L.vy) < H * .22) { L.st = 'rest'; L.rest = 0; L.vy = L.vx = L.vr = 0; } else { L.vy *= -.55; L.vx *= .86; L.vr *= .7; }
         }
         if (L.x < 0) { L.x = 0; L.vx = Math.abs(L.vx) * .7; } else if (L.x + L.w > W) { L.x = W - L.w; L.vx = -Math.abs(L.vx) * .7; }
-      } else if (L.st === 'rest') { L.rest += dt; if (L.rest > 1.2) L.st = 'back'; }
+      } else if (L.st === 'rest') { L.rest += dt; if (L.rest > 1.2) { L.st = 'back'; L.bvx = L.bvy = L.bvr = 0; } }
       else if (L.st === 'back') {
-        const k = 1 - Math.exp(-3.4 * dt), tr = Math.round(L.rot / 6.2832) * 6.2832;
-        L.x += (L.hx - L.x) * k; L.y += (L.hy - L.y) * k; L.rot += (tr - L.rot) * k;
-        if (Math.abs(L.hx - L.x) + Math.abs(L.hy - L.y) < 1.5 && Math.abs(tr - L.rot) < .01) { L.x = L.hx; L.y = L.hy; L.rot = 0; L.st = 'home'; }
+        // vuelve de un tiron, como con gravedad propia hacia su lugar (resorte con un poquito de rebote)
+        const stiff = 70, damp = 2 * Math.sqrt(stiff) * .62, tr = Math.round(L.rot / 6.2832) * 6.2832;
+        const ax = (L.hx - L.x) * stiff - L.bvx * damp, ay = (L.hy - L.y) * stiff - L.bvy * damp, ar = (tr - L.rot) * stiff - L.bvr * damp;
+        L.bvx += ax * dt; L.bvy += ay * dt; L.bvr += ar * dt;
+        L.x += L.bvx * dt; L.y += L.bvy * dt; L.rot += L.bvr * dt;
+        if (Math.abs(L.hx - L.x) + Math.abs(L.hy - L.y) < 1 && Math.abs(L.bvx) + Math.abs(L.bvy) < 24) { L.x = L.hx; L.y = L.hy; L.rot = 0; L.st = 'home'; }
       }
     });
     // las letras chocan entre si: una que vuela despierta a las que estan quietas y las empuja
@@ -492,7 +495,7 @@ document.addEventListener('pointermove', (e) => {
     };
     tick();
   }  // un click (o Enter) solo sirve para saltear la entrada
-  const skip = () => { if (phase === 'wait' || phase === 'write' || phase === 'hold') { phase = 'out'; intro.classList.remove('ready'); grab = null; drawLetters(); fall(); emoIntro.release(); setTimeout(() => { phase = 'slide'; slide(); }, 2500); } };
+  const skip = () => { if (phase === 'wait' || phase === 'write' || phase === 'hold') { phase = 'out'; intro.classList.remove('ready'); grab = null; drawLetters(); fall(); setTimeout(() => { phase = 'slide'; slide(); }, 2500); } };
   btn.addEventListener('click', () => { if (grabbed) { grabbed = false; return; } skip(); });
   addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); skip(); } });
   let rt = 0;
@@ -502,7 +505,7 @@ document.addEventListener('pointermove', (e) => {
   let lx = 0, ly = 0, ptx = 0, pty = 0;
   addEventListener('pointermove', (e) => { ptx = (e.clientX / innerWidth - 0.5) * 2; pty = (e.clientY / innerHeight - 0.5) * 2; }, { passive: true });
   const lean = () => { lx += (ptx - lx) * 0.06; ly += (pty - ly) * 0.06; cv.style.transform = `translate3d(${(lx * 14).toFixed(1)}px, ${(ly * 9).toFixed(1)}px, 0) rotate(${(lx * 0.8).toFixed(2)}deg)`; };
-  const start = () => { layout(); startAt = performance.now() + 500; raf = requestAnimationFrame(loop); emoIntro.start(); };
+  const start = () => { layout(); startAt = performance.now() + 500; raf = requestAnimationFrame(loop); };
   (document.fonts && document.fonts.load ? document.fonts.load(`100px ${FONT}`, TEXT) : Promise.resolve()).then(start, start);
 
   // precarga en segundo plano: fondo y primeras portadas
