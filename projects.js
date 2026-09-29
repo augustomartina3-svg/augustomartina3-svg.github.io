@@ -24,7 +24,7 @@ window.PORTFOLIO = {
   ],
   projects: [
     { slug: 'nativo', title: 'Centro nativo', tags: 'Redes · Editorial', cat: 'trabajo', year: '', color: '#a2bc14', cover: 'img/nativo.jpg',
-      slides: ['img/nativo/01.jpg', 'img/nativo/02.jpg', 'img/nativo/03.jpg', 'img/nativo/04.jpg', 'img/nativo/05.jpg'], info: null },
+      slides: ['img/nativo/01.jpg', 'img/nativo/02.jpg', 'img/nativo/03.jpg', 'img/nativo/04.jpg', 'img/nativo/05.jpg', 'img/nativo/06.webp', 'img/nativo/07.jpg', 'img/nativo/08.jpg', 'img/nativo/09.jpg', 'img/nativo/10.webp'], info: null },
 
     { slug: 'guess', title: 'Guess', tags: 'Motion · Placas', cat: 'fadu', year: '', color: '#376e66', cover: 'img/guess.jpg',
       slides: ['img/guess/01.jpg', 'img/guess/02.jpg'], info: null },
