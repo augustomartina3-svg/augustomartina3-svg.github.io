@@ -892,17 +892,22 @@ body.wall .stage { align-items: flex-end; }
 .carousel::before {
   content: ''; position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 0; pointer-events: none;
   width: min(70vw, 560px); height: min(70vw, 560px); border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 16, 16, .1), rgba(16, 16, 16, 0) 68%);
+  background: radial-gradient(circle, rgba(10, 10, 14, .2), rgba(10, 10, 14, 0) 68%);
   opacity: 0; transition: opacity .6s;
 }
 .home.show .carousel::before { opacity: 1; }
 .stage .pf > .fbox::before {
   content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit;
-  background: linear-gradient(150deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, 0) 32%, rgba(20, 20, 28, 0) 62%, rgba(20, 20, 28, .14) 100%);
+  background: linear-gradient(150deg, rgba(255, 255, 255, .32) 0%, rgba(255, 255, 255, 0) 34%, rgba(20, 20, 28, 0) 58%, rgba(20, 20, 28, .3) 100%);
   opacity: 0; transition: opacity .5s;
 }
 .stage .pf.active > .fbox::before { opacity: 1; }
 .stage .pf.active > .fbox { filter: drop-shadow(0 1.6cqw 2.2cqw rgba(20, 20, 28, .22)); }
+/* el nombre del papelito solo se lee en la carpeta activa: las que asoman al costado no muestran el cartelito (se cortaba con el borde de la pantalla) */
+.stage .fslip { opacity: 0; transition: opacity .35s; }
+.stage .pf.active .fslip { opacity: 1; }
+/* en mobile, el "tocá una carpeta" (centrado) puede pisar el mail de la esquina: lo subimos */
+@media (max-width: 480px) { .homehint { bottom: calc(var(--pad) + 30px); } }
 /* emojis en 4 colores puros que se turnan: blanco, negro, azul, gris */
 .pops img, #introEmo img, #workEmo img {
   filter: grayscale(1) brightness(1.55) contrast(1.05) drop-shadow(0 0 1.6cqw rgba(255, 255, 255, .9)) drop-shadow(0 1.4cqw 1.6cqw rgba(20, 20, 28, .28));
