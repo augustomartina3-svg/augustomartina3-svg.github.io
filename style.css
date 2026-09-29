@@ -862,8 +862,8 @@ body.wall .stage { align-items: flex-end; }
 .carousel { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: min(94vw, 760px); z-index: 1; }
 .stage, body:not(.wall) .stage:has(.f4) {
   position: relative; inset: auto; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: clamp(16px, 4vw, 36px);
-  overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory; scroll-behavior: smooth;
-  padding: clamp(16px, 4vh, 32px) calc(50% - var(--w) / 2);
+  overflow-x: auto; overflow-y: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  padding: clamp(74px, 15vh, 130px) calc(50% - var(--w) / 2) clamp(16px, 4vh, 32px);
   -ms-overflow-style: none; scrollbar-width: none;
   -webkit-mask-image: linear-gradient(to right, transparent 0, #000 13%, #000 87%, transparent 100%);
   mask-image: linear-gradient(to right, transparent 0, #000 13%, #000 87%, transparent 100%);
