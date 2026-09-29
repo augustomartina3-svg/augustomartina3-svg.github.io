@@ -809,8 +809,7 @@ body.azul .intro { background: #1700fe; }
 .intro.writing .loading { opacity: 0; }
 .loading .dots { display: inline-block; width: 1.4em; text-align: left; }
 .loading .dots::before { content: ''; animation: loadingDotsText 1.1s steps(4) infinite; }
-@keyframes loadingDotsText { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }
-/* el Hola sin gravedad: aparece quieto en su lugar (se escribe ahi mismo) */
+@keyframes loadingDotsText { 0% { content: ''; } 25% { content: '.'; } 50% { content: '..'; } 75% { content: '...'; } 100% { content: ''; } }/* el Hola sin gravedad: aparece quieto en su lugar (se escribe ahi mismo) */
 #holaCv, .intro.ready #holaCv { animation: none; }
 /* cuarta carpeta: Behance (naranja) */
 .pf[data-kind="behance"] > .fbox { --sT: 15.5%; --sc: rgba(255, 228, 196, .92); }
@@ -857,3 +856,27 @@ body.wall .stage { align-items: flex-end; }
 }
 /* costura: puntada punteada cerca del borde, con sombrita para que se vea hundida */
 .pf > .fbox::after { left: 6.5%; right: 6.5%; top: calc(var(--sT) + 7.5%); bottom: 8.5%; border-radius: 2.2cqw; border: max(1.2px, .5cqw) dashed var(--sc); filter: drop-shadow(0 .25cqw .2cqw rgba(0, 0, 0, .28)); }
+/* pestaña de carpetas como carrusel: una principal centrada, las de al lado se ven a medias, con flechas para elegir */
+.carousel { position: absolute; left: 50%; top: 50%; translate: -50% -50%; width: min(94vw, 760px); z-index: 1; }
+.stage, body:not(.wall) .stage:has(.f4) {
+  position: relative; inset: auto; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: clamp(16px, 4vw, 36px);
+  overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory; scroll-behavior: smooth;
+  padding: clamp(16px, 4vh, 32px) calc(50% - (min(clamp(150px, 21vh, 250px), 38vw)) / 2);
+  -ms-overflow-style: none; scrollbar-width: none;
+}
+.stage::-webkit-scrollbar { display: none; }
+.stage .pf, body:not(.wall) .stage:has(.f4) .pf { margin: 0; left: 0; scroll-snap-align: center; flex: 0 0 auto; animation: settleSubtle .9s var(--ease) backwards; opacity: .42; scale: .82; transition: opacity .45s var(--ease), scale .45s var(--ease); }
+.home.show .stage .pf.active { opacity: 1; scale: 1; }
+.cnav {
+  position: absolute; top: 50%; translate: 0 -56%; z-index: 3; width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid var(--line); background: #fff; color: var(--ink); font: 400 16px/1 var(--font);
+  display: grid; place-items: center; cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .4s .2s, scale .3s;
+}
+.home.show .cnav { opacity: 1; pointer-events: auto; }
+.cnav:hover { scale: 1.08; }
+.cnav:disabled { opacity: .22; pointer-events: none; }
+.cprev { left: 4px; } .cnext { right: 4px; }
+.cdots { display: flex; justify-content: center; gap: 8px; margin: 2px 0 0; opacity: 0; transition: opacity .4s .3s; }
+.home.show .cdots { opacity: 1; }
+.cdots i { display: block; width: 6px; height: 6px; border-radius: 50%; background: var(--line); transition: background .3s, scale .3s; font-style: normal; }
+.cdots i.active { background: var(--ink); scale: 1.3; }

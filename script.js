@@ -213,6 +213,44 @@ $$('.pf').forEach((a) => {
   dropText($('.fname', a), a.dataset.label, 0);
 });
 
+// pestaña de carpetas como carrusel: una principal centrada, se elige con flechas, con el dedo o con el mouse
+(() => {
+  const stage = $('#stage'), prev = $('#stagePrev'), next = $('#stageNext'), dotsBox = $('#stageDots');
+  if (!stage) return;
+  const cards = $$('.pf', stage);
+  cards.forEach(() => dotsBox.insertAdjacentHTML('beforeend', '<i></i>'));
+  const dots = $$('i', dotsBox);
+  let idx = 0, cool = 0;
+  const goTo = (i, smooth = true) => {
+    idx = clamp(i, 0, cards.length - 1);
+    const c = cards[idx];
+    stage.scrollTo({ left: c.offsetLeft - (stage.clientWidth - c.offsetWidth) / 2, behavior: smooth ? 'smooth' : 'auto' });
+  };
+  const mark = () => {
+    cards.forEach((c, i) => c.classList.toggle('active', i === idx));
+    dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+    prev.disabled = idx === 0; next.disabled = idx === cards.length - 1;
+  };
+  const closest = () => {
+    const cx = stage.scrollLeft + stage.clientWidth / 2;
+    let bi = 0, bd = Infinity;
+    cards.forEach((c, i) => { const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - cx); if (d < bd) { bd = d; bi = i; } });
+    return bi;
+  };
+  let sTimer = 0;
+  stage.addEventListener('scroll', () => { clearTimeout(sTimer); sTimer = setTimeout(() => { idx = closest(); mark(); }, 90); }, { passive: true });
+  prev.addEventListener('click', () => goTo(idx - 1));
+  next.addEventListener('click', () => goTo(idx + 1));
+  cards.forEach((c, i) => {
+    c.addEventListener('click', (e) => {
+      if (i !== idx) { e.preventDefault(); e.stopImmediatePropagation(); goTo(i); }
+    }, true);
+  });
+  mark();
+  addEventListener('resize', () => goTo(idx, false));
+  new ResizeObserver(() => goTo(idx, false)).observe(stage);
+})();
+
 // la luz del cursor recorre la carpeta que se estÃ¡ por elegir
 document.addEventListener('pointermove', (e) => {
   const f = e.target.closest && e.target.closest('.pf, .cover, .card, .chip, .close, .pnav');
@@ -427,7 +465,7 @@ document.addEventListener('pointermove', (e) => {
     loadBar();
     requestAnimationFrame(() => requestAnimationFrame(() => intro.classList.add('slide')));
     setTimeout(() => {
-      intro.classList.add('leave'); home.classList.add('show'); if (!document.body.classList.contains('wall')) setTimeout(() => HomePhys.start(), 5200);
+      intro.classList.add('leave'); home.classList.add('show');
       const h = location.hash; if (h === '#trabajos') showPanel('projects'); else if (h === '#sobre-mi') showPanel('about');
     }, 1050);
   }  // el HOLA hace un zoom con un brillo perlado que lo cruza, vuelve a su tamaño y cae con gravedad

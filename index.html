@@ -34,7 +34,9 @@
   <main id="home" class="home">
     <span class="corner tl">Martina Augusto</span>
     <span class="corner tr">Portfolio ’26</span>
-    <div class="stage">
+    <div class="carousel">
+    <button class="cnav cprev" id="stagePrev" aria-label="Carpeta anterior">←</button>
+    <div class="stage" id="stage">
       <a href="#trabajos" class="pf f1" data-open="projects" data-kind="silver" data-label="Trabajos" aria-label="Trabajos" style="--rot:-2deg;--dr:2deg;--dx:6px;--dy:-9px;--dur:8s">
         <span class="pops" aria-hidden="true"><img src="img/sobre-mi/emoji-star.svg" alt=""><img src="img/sobre-mi/emoji-sparkle.svg" alt=""><img src="img/sobre-mi/emoji-bolt.svg" alt=""></span>
       </a>
@@ -47,7 +49,11 @@
       <a href="https://www.behance.net/martinaaugusto1" target="_blank" rel="noopener" class="pf f4" data-kind="behance" data-label="Behance" aria-label="Behance (se abre en otra pestaña)" style="--rot:1.5deg;--dr:-1.5deg;--dx:-5px;--dy:8px;--dur:8.6s">
         <span class="pops" aria-hidden="true"><img src="img/sobre-mi/emoji-star.svg" alt=""><img src="img/sobre-mi/emoji-heart-black.svg" alt=""><img src="img/sobre-mi/emoji-smile.svg" alt=""></span>
       </a>
-    </div>    <p class="homehint" id="homeHint">Tocá una carpeta</p>
+    </div>
+    <button class="cnav cnext" id="stageNext" aria-label="Carpeta siguiente">→</button>
+    </div>
+    <div class="cdots" id="stageDots" aria-hidden="true"></div>
+    <p class="homehint" id="homeHint">Tocá una carpeta</p>
     <a class="corner br" href="mailto:augustomartina3@gmail.com">augustomartina3@gmail.com</a>
     <span class="corner bl"><span>Diseño gráfico</span><span>FADU · UBA</span><span>© 2026</span></span>
   </main>
