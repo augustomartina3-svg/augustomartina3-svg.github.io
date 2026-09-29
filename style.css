@@ -892,13 +892,6 @@ body.wall .stage { align-items: flex-end; }
   opacity: 0; transition: opacity .5s .3s;
 }
 .home.show .ficha { opacity: 1; }
-.carousel::before {
-  content: ''; position: absolute; left: 50%; top: 50%; translate: -50% -50%; z-index: 0; pointer-events: none;
-  width: min(70vw, 560px); height: min(70vw, 560px); border-radius: 50%;
-  background: radial-gradient(circle, rgba(10, 10, 14, .2), rgba(10, 10, 14, 0) 68%);
-  opacity: 0; transition: opacity .6s;
-}
-.home.show .carousel::before { opacity: 1; }
 .stage .pf > .fbox::before {
   content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; border-radius: inherit;
   background: linear-gradient(150deg, rgba(255, 255, 255, .32) 0%, rgba(255, 255, 255, 0) 34%, rgba(20, 20, 28, 0) 58%, rgba(20, 20, 28, .3) 100%);
