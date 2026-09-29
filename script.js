@@ -644,7 +644,7 @@ function buildPanel(name) {
   if (!p || current !== name) return;
   p.classList.remove('pre');
   const title = $('.ptitle', p);
-  dropText(title, name === 'projects' ? 'Trabajos' : 'Sobre mí', 0.2);
+  dropText(title, name === 'projects' ? 'Proyectos' : 'Sobre mí', 0.2);
   if (name === 'projects') Work.open();
   if (name === 'about') { paintIn($$('[data-paint]', p), 350, 170); Gravity.start(); }
 }
