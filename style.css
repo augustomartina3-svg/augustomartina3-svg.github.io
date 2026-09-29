@@ -820,6 +820,8 @@ body.azul .intro { background: #1700fe; }
 body.wall .home.show .pf.f4 { animation-delay: 1.55s; }
 /* con cuatro carpetas: un poco mas chicas para que entren en la columna */
 body:not(.wall) .stage:has(.f4) { display: grid; grid-template-columns: repeat(2, var(--w)); justify-content: center; align-content: center; column-gap: calc(var(--w) * .4); row-gap: calc(var(--w) * .55); --w: min(clamp(150px, 21vh, 250px), 38vw); padding-top: calc(var(--w) * .25); }
+/* carrusel: carpetas un toque mas grandes */
+.stage, body:not(.wall) .stage:has(.f4) { --w: min(clamp(190px, 26vh, 300px), 46vw); }
 body:not(.wall) .stage:has(.f4) .pf { margin: 0; left: 0; }
 body.wall .stage:has(.f4) { --w: min(clamp(120px, 20vw, 260px), 22vw, 30vh); gap: clamp(20px, 4vw, 72px); }
 /* brillo perlado que sigue al cursor, recortado con la silueta exacta de cada carpeta */
@@ -861,7 +863,7 @@ body.wall .stage { align-items: flex-end; }
 .stage, body:not(.wall) .stage:has(.f4) {
   position: relative; inset: auto; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: clamp(16px, 4vw, 36px);
   overflow-x: auto; overflow-y: visible; scroll-snap-type: x mandatory; scroll-behavior: smooth;
-  padding: clamp(16px, 4vh, 32px) calc(50% - (min(clamp(150px, 21vh, 250px), 38vw)) / 2);
+  padding: clamp(16px, 4vh, 32px) calc(50% - var(--w) / 2);
   -ms-overflow-style: none; scrollbar-width: none;
 }
 .stage::-webkit-scrollbar { display: none; }
