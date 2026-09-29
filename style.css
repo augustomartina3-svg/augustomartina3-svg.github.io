@@ -869,8 +869,9 @@ body.wall .stage { align-items: flex-end; }
   mask-image: linear-gradient(to right, transparent 0, #000 13%, #000 87%, transparent 100%);
 }
 .stage::-webkit-scrollbar { display: none; }
-.stage .pf, body:not(.wall) .stage:has(.f4) .pf { margin: 0; left: 0; scroll-snap-align: center; flex: 0 0 auto; animation: settleSubtle .9s var(--ease) backwards; opacity: .42; scale: .82; transition: opacity .45s var(--ease), scale .45s var(--ease); }
-.home.show .stage .pf.active { opacity: 1; scale: 1; }
+.stage .pf, body:not(.wall) .stage:has(.f4) .pf { margin: 0; left: 0; scroll-snap-align: center; flex: 0 0 auto; animation: settleSubtle .9s var(--ease) backwards; opacity: .38; scale: .68; z-index: 1; transition: opacity .45s var(--ease), scale .45s var(--ease); }
+.home.show .stage .pf.active { opacity: 1; scale: 1; z-index: 2; }
+.stage, body:not(.wall) .stage:has(.f4) { gap: clamp(28px, 8vw, 64px); }
 .cnav {
   position: absolute; top: 50%; translate: 0 -56%; z-index: 3; width: 40px; height: 40px; border-radius: 50%;
   border: 1px solid var(--line); background: #fff; color: var(--ink); font: 400 16px/1 var(--font);
