@@ -915,3 +915,8 @@ body.wall .stage { align-items: flex-end; }
 #introEmo img:nth-child(4n+3), #workEmo img:nth-child(4n+3) { filter: grayscale(1) sepia(1) hue-rotate(205deg) saturate(6) brightness(1.1) drop-shadow(0 0 10px rgba(23, 0, 254, .35)); }
 .pops img:nth-child(4n+4) { filter: grayscale(1) brightness(1) contrast(.92) drop-shadow(0 1.4cqw 1.6cqw rgba(20, 20, 28, .3)); }
 #introEmo img:nth-child(4n+4), #workEmo img:nth-child(4n+4) { filter: grayscale(1) brightness(1) contrast(.92) drop-shadow(0 4px 6px rgba(16, 16, 16, .3)); }
+/* lamina en fila (como los renglones de un caso de Behance): varias imagenes juntas, mismo alto, como un collage */
+.slide.row { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: clamp(10px, 2.2vw, 22px); padding: 0 clamp(24px, 5vw, 64px); }
+.slide.row .ri { position: relative; flex: 1 1 0; min-width: 0; height: calc(100vh - var(--head) - 72px - var(--s4)); height: calc(100dvh - var(--head) - 72px - var(--s4)); display: flex; align-items: center; justify-content: center; }
+.slide.row .ri img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; border-radius: 2px; opacity: 0; scale: .97; transition: opacity .6s, scale .7s var(--ease); box-shadow: 0 20px 46px -28px rgba(16, 16, 40, .4); }
+@media (max-width: 720px) { .slide.row { flex-direction: column; gap: clamp(10px, 3vw, 18px); } .slide.row .ri { height: auto; max-height: calc((100dvh - var(--head) - 96px) / 2); width: 100%; } }

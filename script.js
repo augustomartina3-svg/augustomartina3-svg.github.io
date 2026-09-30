@@ -817,8 +817,12 @@ const Viewer = (() => {
     dropText(title, pr.title); tags.textContent = [pr.tags, pr.year].filter(Boolean).join(' · ');
     loader = new IntersectionObserver((es) => es.forEach((e) => {
       if (!e.isIntersecting) return;
-      const im = $('img', e.target);
-      if (im && !im.src) { im.onload = () => { im.classList.add('loaded'); const sk = $('.sk', e.target); if (sk) sk.remove(); }; im.src = im.dataset.src; }
+      $$('img', e.target).forEach((im) => {
+        if (im.src) return;
+        const sk = im.previousElementSibling && im.previousElementSibling.classList.contains('sk') ? im.previousElementSibling : $('.sk', e.target);
+        im.onload = () => { im.classList.add('loaded'); if (sk) sk.remove(); };
+        im.src = im.dataset.src;
+      });
       loader.unobserve(e.target);
     }), { root: track, rootMargin: '0px 150% 0px 150%' });
     seen = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('in', e.isIntersecting)), { root: track, threshold: 0.55 });
@@ -832,12 +836,23 @@ const Viewer = (() => {
       slides.push(s);
     }
     (pr.slides || []).forEach((src, i) => {
-      const isGif = /\.gif($|\?)/i.test(src);
-      const s = document.createElement('div'); s.className = isGif ? 'slide gif' : 'slide';
-      const sk = document.createElement('i'); sk.className = 'sk';
-      const im = new Image(); im.alt = `${pr.title} — ${i + 1}`; im.decoding = 'async'; im.dataset.src = src;
-      s.append(sk, im);
-      if (isGif) { const b = document.createElement('span'); b.className = 'gif-badge'; b.textContent = '.GIF'; s.append(b); }
+      // una lamina puede ser una sola imagen, o un grupo (array) que se muestra en fila, como las filas de un caso de Behance
+      const group = Array.isArray(src) ? src : [src];
+      const isGif = group.some((g) => /\.gif($|\?)/i.test(g));
+      const s = document.createElement('div'); s.className = group.length > 1 ? 'slide row' : (isGif ? 'slide gif' : 'slide');
+      if (group.length > 1) {
+        group.forEach((g, gi) => {
+          const ri = document.createElement('span'); ri.className = 'ri';
+          const sk = document.createElement('i'); sk.className = 'sk';
+          const im = new Image(); im.alt = `${pr.title} — ${i + 1}.${gi + 1}`; im.decoding = 'async'; im.dataset.src = g;
+          ri.append(sk, im); s.append(ri);
+        });
+      } else {
+        const sk = document.createElement('i'); sk.className = 'sk';
+        const im = new Image(); im.alt = `${pr.title} — ${i + 1}`; im.decoding = 'async'; im.dataset.src = src;
+        s.append(sk, im);
+        if (isGif) { const b = document.createElement('span'); b.className = 'gif-badge'; b.textContent = '.GIF'; s.append(b); }
+      }
       slides.push(s);
     });
     n = slides.length;

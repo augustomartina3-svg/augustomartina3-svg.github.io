@@ -27,7 +27,7 @@ window.PORTFOLIO = {
       slides: ['img/nativo/01.jpg', 'img/nativo/02.jpg', 'img/nativo/03.gif', 'img/nativo/04.gif', 'img/nativo/05.jpg', 'img/nativo/06.jpg', 'img/nativo/07.gif', 'img/nativo/08.jpg', 'img/nativo/09.jpg', 'img/nativo/10.jpg', 'img/nativo/11.jpg', 'img/nativo/12.jpg', 'img/nativo/13.jpg', 'img/nativo/14.jpg', 'img/nativo/15.jpg', 'img/nativo/16.jpg', 'img/nativo/17.jpg', 'img/nativo/18.jpg', 'img/nativo/19.jpg', 'img/nativo/20.jpg', 'img/nativo/21.jpg', 'img/nativo/22.jpg'], info: null },
 
     { slug: 'guess', title: 'Guess', tags: 'Motion · Placas', cat: 'fadu', year: '', color: '#376e66', cover: 'img/guess.jpg',
-      slides: ['img/guess/01.gif', 'img/guess/02.jpg', 'img/guess/03.jpg', 'img/guess/04.jpg'], info: null },
+      slides: ['img/guess/01.gif', 'img/guess/02.jpg', ['img/guess/03a.png', 'img/guess/03b.png', 'img/guess/03c.png'], 'img/guess/04.jpg'], info: null },
 
     { slug: 'remera', title: 'Remera', tags: 'Ilustración · Estampado', cat: 'trabajo', year: '', color: '#ff7300', cover: 'img/remera.jpg',
       slides: ['img/remera/01.jpg'], info: null },
