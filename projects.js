@@ -53,8 +53,9 @@ window.PORTFOLIO = {
     { slug: 'nuveo', title: 'Nuveo', tags: 'Generación de imágenes con IA · Fotoproducto', cat: 'trabajo', year: '', color: '#4a7a96', cover: 'img/nuveo.jpg',
       slides: ['img/nuveo/01.jpg', 'img/nuveo/02.jpg', 'img/nuveo/03.jpg', 'img/nuveo/04.jpg', 'img/nuveo/05.jpg', 'img/nuveo/gif-abdomen.gif', 'img/nuveo/06.jpg', 'img/nuveo/07.jpg', 'img/nuveo/08.jpg', 'img/nuveo/09.jpg', 'img/nuveo/10.jpg', 'img/nuveo/11.jpg', 'img/nuveo/12.jpg', 'img/nuveo/13.jpg', 'img/nuveo/14.jpg', 'img/nuveo/15.jpg', 'img/nuveo/16.jpg', 'img/nuveo/17.jpg', 'img/nuveo/18.jpg', 'img/nuveo/19.jpg', 'img/nuveo/20.jpg', 'img/nuveo/21.jpg', 'img/nuveo/22.jpg', 'img/nuveo/23.jpg', 'img/nuveo/24.jpg', 'img/nuveo/gif-abdomengluteos.gif', 'img/nuveo/30.jpg', 'img/nuveo/31.jpg', 'img/nuveo/32.jpg', 'img/nuveo/33.jpg', 'img/nuveo/34.jpg'], info: null },
 
-    { slug: 'chandrayoga', title: 'Chandra Yoga', tags: 'Adaptación de folletos a flyers', cat: 'trabajo', year: '', color: '#d6301f', cover: 'img/chandrayoga.jpg',
-      slides: ['img/chandrayoga/01.gif', 'img/chandrayoga/02.jpg', 'img/chandrayoga/03.jpg', 'img/chandrayoga/04.jpg', 'img/chandrayoga/05.jpg', 'img/chandrayoga/06.jpg', 'img/chandrayoga/07.jpg'], info: null },
+    { slug: 'chandrayoga', title: 'Chandra Yoga', tags: 'Diseño editorial · Social media', cat: 'trabajo', year: '', color: '#d6301f', cover: 'img/chandrayoga.jpg',
+      slides: ['img/chandrayoga/01.gif', 'img/chandrayoga/02.jpg', 'img/chandrayoga/03.jpg', 'img/chandrayoga/04.jpg', 'img/chandrayoga/05.jpg', 'img/chandrayoga/06.jpg', 'img/chandrayoga/07.jpg'],
+      info: { text: 'Diseñé el folleto de Chandra Yoga y después lo adapté a social media: logo animado, placas para el feed de Instagram e historias.', role: 'Diseño del folleto · Adaptación a social media' } },
 
   ],
 };
