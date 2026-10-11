@@ -10,6 +10,7 @@
      color  → color del proyecto (hex): tiñe el brillo y la barra de progreso
      cover  → portada, vertical 3:4 (por ejemplo 900×1200)
      slides → las imágenes del proyecto, en orden (la primera es la portada grande)
+              también puede ir un reel de Instagram: { reel: 'https://www.instagram.com/reel/…/' }
      info   → (opcional) una lámina de texto al comienzo del proyecto:
               { text: 'Qué era, qué hiciste, cómo lo pensaste…', role: 'Diseño e ilustración', tools: 'Illustrator · Photoshop' }
 
@@ -58,7 +59,7 @@ window.PORTFOLIO = {
       info: { text: 'La identidad de Chandra Yoga era en blanco y negro: le sumé color. Con esa nueva paleta diseñé el folleto, lo preparé para impresión y después lo adapté a social media: logo animado, placas para el feed de Instagram e historias.', role: 'Color para la identidad visual · Diseño del folleto · Preparación para impresión · Adaptación a social media' } },
 
     { slug: 'laferrere', title: 'Deportivo Laferrere', tags: 'Fotografía deportiva · Reel', cat: 'trabajo', year: '', color: '#1f7a3e', cover: 'img/laferrere.jpg',
-      slides: ['img/laferrere/01.jpg', 'img/laferrere/02.jpg', 'img/laferrere/03.jpg', 'img/laferrere/04.jpg', 'img/laferrere/05.jpg', 'img/laferrere/06.jpg', 'img/laferrere/07.jpg', 'img/laferrere/08.jpg'],
+      slides: ['img/laferrere/01.jpg', { reel: 'https://www.instagram.com/reel/DeNuAvdxv05/' }, 'img/laferrere/02.jpg', 'img/laferrere/03.jpg', 'img/laferrere/04.jpg', 'img/laferrere/05.jpg', 'img/laferrere/06.jpg', 'img/laferrere/07.jpg', 'img/laferrere/08.jpg'],
       info: { text: 'Fotografié al equipo de vóley del Club Deportivo Laferrere durante la entrada en calor, los partidos y los festejos, y edité el reel para sus redes.', role: 'Fotografía · Edición de reel', tools: 'iPhone 15 Pro' } },
 
   ],

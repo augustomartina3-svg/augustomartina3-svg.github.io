@@ -558,6 +558,9 @@ body:has(.intro:not(.leave)) .cursor-halo { background: radial-gradient(circle, 
   opacity: 0; transition: opacity .5s .15s;
 }
 .slide.gif.in .gif-badge { opacity: 1; }
+.slide.reel { grid-template-rows: 1fr auto; gap: var(--s2); padding-top: var(--s2); padding-bottom: var(--s2); }
+.slide.reel iframe { width: min(400px, 100%); height: calc(100dvh - var(--head) - 72px - var(--s4) - 48px); border: 0; border-radius: 8px; background: #fff; box-shadow: 0 30px 70px -40px rgba(16, 16, 40, .45); }
+.slide.reel a { font-size: var(--t-small); color: var(--mute); text-decoration: underline; text-underline-offset: 3px; }
 .gif-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #f2f2f2; box-shadow: 0 0 6px 1px rgba(255, 255, 255, .8); animation: gifDot 1.6s ease-in-out infinite; }
 @keyframes gifDot { 0%, 100% { opacity: .4; scale: .85; } 50% { opacity: 1; scale: 1; } }
 /* entrada de las carpetas mas sutil: fade + leve asentamiento, sin caida ni rebote, una por una */

@@ -836,6 +836,14 @@ const Viewer = (() => {
       slides.push(s);
     }
     (pr.slides || []).forEach((src, i) => {
+      // un reel de Instagram: { reel: 'https://www.instagram.com/reel/<id>/' } se muestra embebido, con un link de respaldo
+      if (src && src.reel) {
+        const s = document.createElement('div'); s.className = 'slide reel';
+        const url = src.reel.split('?')[0].replace(/\/?$/, '/');
+        const fr = document.createElement('iframe'); fr.src = url + 'embed/'; fr.title = `${pr.title} — reel`; fr.loading = 'lazy'; fr.allow = 'autoplay; encrypted-media; picture-in-picture'; fr.setAttribute('allowfullscreen', '');
+        const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Ver el reel en Instagram ↗';
+        s.append(fr, a); slides.push(s); return;
+      }
       // una lamina puede ser una sola imagen, o un grupo (array) que se muestra en fila, como las filas de un caso de Behance
       const group = Array.isArray(src) ? src : [src];
       const isGif = group.some((g) => /\.gif($|\?)/i.test(g));
