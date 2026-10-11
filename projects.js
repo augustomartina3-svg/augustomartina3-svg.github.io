@@ -36,8 +36,9 @@ window.PORTFOLIO = {
     { slug: 'seryva', title: 'Seryva', tags: 'Fotografía · Producto', cat: 'trabajo', year: '', color: '#dd7f09', cover: 'img/seryva.jpg',
       slides: ['img/seryva/01.jpg', 'img/seryva/02.jpg', 'img/seryva/03.jpg', 'img/seryva/04.jpg', 'img/seryva/05.jpg', 'img/seryva/06.jpg', 'img/seryva/07.jpg', 'img/seryva/08.jpg', 'img/seryva/09.jpg', 'img/seryva/10.jpg'], info: null },
 
-    { slug: 'peak', title: 'Estoy en mi peak', tags: 'Ilustración · Stickers', cat: 'fadu', year: '', color: '#ff48be', cover: 'img/peak.jpg',
-      slides: ['img/peak/01.jpg', 'img/peak/02.jpg', 'img/peak/03.jpg', 'img/peak/04.jpg', 'img/peak/05.jpg', 'img/peak/06.jpg', 'img/peak/07.jpg', 'img/peak/08.jpg', 'img/peak/09.jpg'], info: null },
+    { slug: 'peak', title: 'Estoy en mi peak', tags: 'Sistema de identidad visual · Playlist', cat: 'fadu', year: '', color: '#ff48be', cover: 'img/peak.jpg',
+      slides: ['img/peak/01.jpg', 'img/peak/02.jpg', 'img/peak/03.jpg', 'img/peak/04.jpg', 'img/peak/05.jpg', 'img/peak/06.jpg', 'img/peak/07.jpg', 'img/peak/08.jpg', 'img/peak/09.jpg'],
+      info: { text: 'Un sistema de identidad visual construido a partir de una playlist de Bad Bunny. Cada canción se vuelve una pieza: tarjetones con su código de Spotify, stickers, afiche, tríptico y sobre, unidos por la misma paleta, el collage y la tipografía.', role: 'Identidad visual · Ilustración · Diseño editorial' } },
 
     { slug: 'tag', title: 'Tag', tags: 'Identidad · Festival', cat: 'fadu', year: '', color: '#dbae03', cover: 'img/tag.jpg',
       slides: ['img/tag/01.jpg', 'img/tag/02.jpg', 'img/tag/03.jpg', 'img/tag/04.jpg', 'img/tag/05.jpg', 'img/tag/06.jpg', 'img/tag/07.jpg', 'img/tag/08.jpg', 'img/tag/09.jpg'], info: null },
