@@ -55,7 +55,7 @@ window.PORTFOLIO = {
 
     { slug: 'chandrayoga', title: 'Chandra Yoga', tags: 'Diseño editorial · Social media', cat: 'trabajo', year: '', color: '#d6301f', cover: 'img/chandrayoga.jpg',
       slides: ['img/chandrayoga/01.gif', 'img/chandrayoga/02.jpg', 'img/chandrayoga/03.jpg', 'img/chandrayoga/04.jpg', 'img/chandrayoga/05.jpg', 'img/chandrayoga/06.jpg', 'img/chandrayoga/07.jpg'],
-      info: { text: 'Diseñé el folleto de Chandra Yoga, lo preparé para impresión y después lo adapté a social media: logo animado, placas para el feed de Instagram e historias.', role: 'Diseño del folleto · Preparación para impresión · Adaptación a social media' } },
+      info: { text: 'La identidad de Chandra Yoga era en blanco y negro: le sumé color. Con esa nueva paleta diseñé el folleto, lo preparé para impresión y después lo adapté a social media: logo animado, placas para el feed de Instagram e historias.', role: 'Color para la identidad visual · Diseño del folleto · Preparación para impresión · Adaptación a social media' } },
 
   ],
 };
