@@ -823,6 +823,12 @@ const Viewer = (() => {
         im.onload = () => { im.classList.add('loaded'); if (sk) sk.remove(); };
         im.src = im.dataset.src;
       });
+      $$('video', e.target).forEach((v) => {
+        if (v.src) return;
+        const sk = $('.sk', e.target);
+        v.onloadeddata = () => { v.classList.add('loaded'); if (sk) sk.remove(); v.play().catch(() => {}); };
+        v.src = v.dataset.src;
+      });
       loader.unobserve(e.target);
     }), { root: track, rootMargin: '0px 150% 0px 150%' });
     seen = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('in', e.isIntersecting)), { root: track, threshold: 0.55 });
@@ -836,6 +842,13 @@ const Viewer = (() => {
       slides.push(s);
     }
     (pr.slides || []).forEach((src, i) => {
+      // un video propio (.mp4): se reproduce solo, sin sonido y en loop, como un GIF pero más liviano
+      if (typeof src === 'string' && /\.mp4($|\?)/i.test(src)) {
+        const s = document.createElement('div'); s.className = 'slide';
+        const sk = document.createElement('i'); sk.className = 'sk';
+        const v = document.createElement('video'); v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.preload = 'none'; v.dataset.src = src; v.setAttribute('aria-label', `${pr.title} — ${i + 1}`);
+        s.append(sk, v); slides.push(s); return;
+      }
       // un reel o post de Instagram: { reel: 'https://www.instagram.com/reel/<id>/' } o { ig: 'https://www.instagram.com/p/<id>/' } se muestra embebido, con un link de respaldo
       if (src && (src.reel || src.ig)) {
         const s = document.createElement('div'); s.className = 'slide reel';
