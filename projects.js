@@ -63,5 +63,8 @@ window.PORTFOLIO = {
       slides: ['img/laferrere/01.jpg', { reel: 'https://www.instagram.com/reel/DeNuAvdxv05/' }, 'img/laferrere/02.jpg', 'img/laferrere/03.jpg', 'img/laferrere/04.jpg', 'img/laferrere/05.jpg', 'img/laferrere/06.jpg', 'img/laferrere/07.jpg', 'img/laferrere/08.jpg'],
       info: { text: 'Fotografié al equipo de vóley del Club Deportivo Laferrere durante la entrada en calor, los partidos y los festejos, y edité el reel para sus redes.', role: 'Fotografía · Edición de reel', tools: 'iPhone 15 Pro' } },
 
+    { slug: 'lamatanza', title: 'Municipio de La Matanza', tags: 'Diseño gráfico institucional · Social media', cat: 'trabajo', year: '', color: '#293e75', cover: 'img/lamatanza.jpg',
+      slides: ['img/lamatanza/01.jpg', 'img/lamatanza/02.jpg', 'img/lamatanza/03.jpg', 'img/lamatanza/04.jpg', 'img/lamatanza/05.jpg', 'img/lamatanza/06.jpg', ['img/lamatanza/07-1.jpg', 'img/lamatanza/07-2.jpg', 'img/lamatanza/07-3.jpg', 'img/lamatanza/07-4.jpg'], ['img/lamatanza/08-1.jpg', 'img/lamatanza/08-2.jpg', 'img/lamatanza/08-3.jpg']],
+      info: { text: 'Piezas de comunicación ambiental para las redes del Municipio de La Matanza: convocatorias a plantaciones y jornadas, coberturas de eventos y carruseles informativos, todas dentro del sistema visual institucional del municipio.', role: 'Diseño gráfico institucional · Social media' } },
   ],
 };
