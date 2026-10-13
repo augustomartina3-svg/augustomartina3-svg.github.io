@@ -849,6 +849,14 @@ const Viewer = (() => {
         const v = document.createElement('video'); v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.preload = 'none'; v.dataset.src = src; v.setAttribute('aria-label', `${pr.title} — ${i + 1}`);
         s.append(sk, v); slides.push(s); return;
       }
+      // un diseño embebido de otra plataforma (Adobe Express, etc.): { embed: '<url del iframe>', ratio: '16/9' }
+      if (src && src.embed) {
+        const s = document.createElement('div'); s.className = 'slide reel embed';
+        const fr = document.createElement('iframe'); fr.src = src.embed; fr.title = `${pr.title} — ${i + 1}`; fr.loading = 'lazy'; fr.allow = 'clipboard-write; fullscreen'; fr.setAttribute('allowfullscreen', ''); fr.referrerPolicy = 'strict-origin-when-cross-origin';
+        const ar = src.ratio || '16/9'; fr.style.aspectRatio = ar; fr.style.setProperty('--ar', ar.replace('/', ' / '));
+        const a = document.createElement('a'); a.href = src.embed; a.target = '_blank'; a.rel = 'noopener'; a.textContent = 'Ver en pantalla completa ↗';
+        s.append(fr, a); slides.push(s); return;
+      }
       // un reel o post de Instagram: { reel: 'https://www.instagram.com/reel/<id>/' } o { ig: 'https://www.instagram.com/p/<id>/' } se muestra embebido, con un link de respaldo
       if (src && (src.reel || src.ig)) {
         const s = document.createElement('div'); s.className = 'slide reel';
