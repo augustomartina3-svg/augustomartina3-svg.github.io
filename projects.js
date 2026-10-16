@@ -12,7 +12,7 @@
      slides → las imágenes del proyecto, en orden (la primera es la portada grande)
               también puede ir un video propio ('img/<slug>/video.mp4', se reproduce solo y en loop) un diseño embebido { embed: '<url del iframe>', ratio: '16/9' } o un reel o un post de Instagram: { reel: 'https://www.instagram.com/reel/…/' } o { ig: 'https://www.instagram.com/p/…/' }
      info   → (opcional) una lámina de texto al comienzo del proyecto:
-              { text: 'Qué era, qué hiciste, cómo lo pensaste…', product: 'Qué es el producto (opcional)', role: 'Diseño e ilustración', tools: 'Illustrator · Photoshop' }
+              { text: 'Qué era, qué hiciste, cómo lo pensaste…', product: 'Qué es el producto (opcional)', image: 'img/<slug>/moodboard.jpg (opcional, va al lado del texto)', imageLabel: 'Moodboard', role: 'Diseño e ilustración', tools: 'Illustrator · Photoshop' }
 
    Para sumar un proyecto: copiá un bloque, cambiá los datos y guardá tus imágenes en img/<slug>/.
    Para ocultar uno: borralo o ponele  hidden: true.
@@ -34,8 +34,8 @@ window.PORTFOLIO = {
       slides: ['img/remera/01.jpg'], info: null },
 
     { slug: 'abu', title: 'abu', tags: 'Identidad · Packaging', cat: 'trabajo', year: '', color: '#4b1030', cover: 'img/abu.jpg',
-      slides: ['img/abu/08.jpg', 'img/abu/02.jpg', 'img/abu/05.jpg', 'img/abu/07.jpg'],
-      info: { text: 'Crear la identidad y el packaging de abu, una marca de gomitas para el sistema linfático pensada para adultos mayores. El desafío era hablarle a ese público sin caer en lo clínico ni en lo aburrido: los abuelos siempre están buscando que alguien los ayude, y abu es la respuesta, con picardía, ternura, autonomía y honestidad. El envase está inspirado en las carameleras antiguas y, con su «Movete un poco», invita a dejar la vida sedentaria atrás.', product: 'Gomitas que ayudan a evitar la linfa lenta y la retención de líquidos: dos por día para un drenaje correcto.', role: 'Identidad · Packaging' } },
+      slides: ['img/abu/08.jpg', 'img/abu/02.jpg', 'img/abu/05.jpg'],
+      info: { text: 'Crear la identidad y el packaging de abu, una marca de gomitas para el sistema linfático pensada para adultos mayores. El desafío era hablarle a ese público sin caer en lo clínico ni en lo aburrido: los abuelos siempre están buscando que alguien los ayude, y abu es la respuesta, con picardía, ternura, autonomía y honestidad. El envase está inspirado en las carameleras antiguas y, con su «Movete un poco», invita a dejar la vida sedentaria atrás.', product: 'Gomitas que ayudan a evitar la linfa lenta y la retención de líquidos: dos por día para un drenaje correcto.', role: 'Identidad · Packaging', image: 'img/abu/07.jpg', imageLabel: 'Moodboard' } },
 
     { slug: 'peak', title: 'Estoy en mi peak', tags: 'Sistema de identidad visual · Playlist', cat: 'fadu', year: '', color: '#ff48be', cover: 'img/peak.jpg',
       slides: ['img/peak/01.jpg', 'img/peak/02.jpg', 'img/peak/03.jpg', 'img/peak/04.jpg', 'img/peak/05.jpg', 'img/peak/06.jpg', 'img/peak/07.jpg', 'img/peak/08.jpg', 'img/peak/09.jpg'],

@@ -839,6 +839,14 @@ const Viewer = (() => {
       s.innerHTML = '<p class="kicker">Sobre el proyecto</p><p class="big"></p><dl></dl>';
       $('.big', s).textContent = inf.text || pr.title;
       [['Producto', inf.product], ['Rol', inf.role], ['Herramientas', inf.tools], ['Año', pr.year]].forEach(([k, v]) => { if (!v) return; const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; $('dl', s).append(dt, dd); });
+      // imagen opcional al lado del texto (por ejemplo, el moodboard): image: 'img/<slug>/moodboard.jpg', imageLabel: 'Moodboard'
+      if (inf.image) {
+        const txt = document.createElement('div'); txt.className = 'info-text'; txt.append(...s.children);
+        const fig = document.createElement('figure'); fig.className = 'info-fig';
+        const im = new Image(); im.alt = `${pr.title} — ${inf.imageLabel || 'imagen'}`; im.decoding = 'async'; im.dataset.src = inf.image;
+        const cap = document.createElement('figcaption'); cap.textContent = inf.imageLabel || '';
+        fig.append(im, cap); s.classList.add('with-img'); s.append(txt, fig);
+      }
       slides.push(s);
     }
     (pr.slides || []).forEach((src, i) => {
