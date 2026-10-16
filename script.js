@@ -838,7 +838,7 @@ const Viewer = (() => {
       const s = document.createElement('div'); s.className = 'slide info in';
       s.innerHTML = '<p class="kicker">Sobre el proyecto</p><p class="big"></p><dl></dl>';
       $('.big', s).textContent = inf.text || pr.title;
-      [['Rol', inf.role], ['Herramientas', inf.tools], ['Año', pr.year]].forEach(([k, v]) => { if (!v) return; const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; $('dl', s).append(dt, dd); });
+      [['Producto', inf.product], ['Rol', inf.role], ['Herramientas', inf.tools], ['Año', pr.year]].forEach(([k, v]) => { if (!v) return; const dt = document.createElement('dt'), dd = document.createElement('dd'); dt.textContent = k; dd.textContent = v; $('dl', s).append(dt, dd); });
       slides.push(s);
     }
     (pr.slides || []).forEach((src, i) => {

@@ -12,7 +12,7 @@
      slides → las imágenes del proyecto, en orden (la primera es la portada grande)
               también puede ir un video propio ('img/<slug>/video.mp4', se reproduce solo y en loop) un diseño embebido { embed: '<url del iframe>', ratio: '16/9' } o un reel o un post de Instagram: { reel: 'https://www.instagram.com/reel/…/' } o { ig: 'https://www.instagram.com/p/…/' }
      info   → (opcional) una lámina de texto al comienzo del proyecto:
-              { text: 'Qué era, qué hiciste, cómo lo pensaste…', role: 'Diseño e ilustración', tools: 'Illustrator · Photoshop' }
+              { text: 'Qué era, qué hiciste, cómo lo pensaste…', product: 'Qué es el producto (opcional)', role: 'Diseño e ilustración', tools: 'Illustrator · Photoshop' }
 
    Para sumar un proyecto: copiá un bloque, cambiá los datos y guardá tus imágenes en img/<slug>/.
    Para ocultar uno: borralo o ponele  hidden: true.
@@ -33,8 +33,9 @@ window.PORTFOLIO = {
     { slug: 'remera', title: 'Remera', tags: 'Ilustración · Estampado', cat: 'trabajo', year: '', color: '#ff7300', cover: 'img/remera.jpg',
       slides: ['img/remera/01.jpg'], info: null },
 
-    { slug: 'seryva', title: 'Seryva', tags: 'Fotografía · Producto', cat: 'trabajo', year: '', color: '#dd7f09', cover: 'img/seryva.jpg',
-      slides: ['img/seryva/01.jpg', 'img/seryva/02.jpg', 'img/seryva/03.jpg', 'img/seryva/04.jpg', 'img/seryva/05.jpg', 'img/seryva/06.jpg', 'img/seryva/07.jpg', 'img/seryva/08.jpg', 'img/seryva/09.jpg', 'img/seryva/10.jpg'], info: null },
+    { slug: 'abu', title: 'abu', tags: 'Packaging · Identidad · Fotoproducto', cat: 'trabajo', year: '', color: '#4b1030', cover: 'img/abu.jpg',
+      slides: ['img/abu/01.jpg', 'img/abu/02.jpg', 'img/abu/03.jpg', 'img/abu/04.jpg', 'img/abu/05.jpg', 'img/abu/06.jpg', 'img/abu/07.jpg'],
+      info: { text: 'Crear la identidad y el packaging de abu, una marca de gomitas para el sistema linfático pensada para adultos mayores. El desafío era hablarle a ese público sin caer en lo clínico ni en lo aburrido, con picardía, ternura, autonomía y honestidad. La respuesta es «Movete un poco»: un envase rosa y verde con forma de frasco de vidrio tallado, que invita a dejar la vida sedentaria atrás.', product: 'Gomitas que ayudan a evitar la linfa lenta y la retención de líquidos: dos por día para un drenaje correcto. Se consiguen en dietéticas y por la web.', role: 'Identidad · Packaging · Fotoproducto' } },
 
     { slug: 'peak', title: 'Estoy en mi peak', tags: 'Sistema de identidad visual · Playlist', cat: 'fadu', year: '', color: '#ff48be', cover: 'img/peak.jpg',
       slides: ['img/peak/01.jpg', 'img/peak/02.jpg', 'img/peak/03.jpg', 'img/peak/04.jpg', 'img/peak/05.jpg', 'img/peak/06.jpg', 'img/peak/07.jpg', 'img/peak/08.jpg', 'img/peak/09.jpg'],
