@@ -845,9 +845,11 @@ const Viewer = (() => {
         const fig = document.createElement('figure'); fig.className = 'info-fig';
         const im = new Image(); im.alt = `${pr.title} — ${inf.imageLabel || 'imagen'}`; im.decoding = 'async'; im.dataset.src = inf.image;
         const cap = document.createElement('figcaption'); cap.textContent = inf.imageLabel || '';
-        fig.append(im, cap); s.classList.add('with-img'); s.append(txt, fig);
-      }
-      slides.push(s);
+        fig.append(im, cap);
+        // en pantallas angostas no entran juntos: la imagen pasa a su propia lámina, justo después del texto
+        if (matchMedia('(max-width: 720px)').matches) { s.append(txt); slides.push(s); const sf = document.createElement('div'); sf.className = 'slide info-solo'; sf.append(fig); slides.push(sf); }
+        else { s.classList.add('with-img'); s.append(txt, fig); slides.push(s); }
+      } else slides.push(s);
     }
     (pr.slides || []).forEach((src, i) => {
       // un video propio (.mp4): se reproduce solo, sin sonido y en loop, como un GIF pero más liviano
