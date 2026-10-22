@@ -797,23 +797,32 @@ const Work = (() => {
    ============================================================ */
 const Viewer = (() => {
   const box = $('#pview'), track = $('#track'), title = $('#pvTitle'), tags = $('#pvTags'), pn = $('#pvN'), fill = $('#pvFill'), prev = $('#pvPrev'), next = $('#pvNext');
-  let isOpen = false, n = 0, loader = null, seen = null, cool = 0, cur = null;
+  let isOpen = false, n = 0, loader = null, seen = null, cool = 0, cur = null, bh = true;
 
-  const idx = () => clamp(Math.round(track.scrollLeft / Math.max(1, track.clientWidth)), 0, Math.max(0, n - 1));
+  const idx = () => {
+    if (bh) { const mid = track.scrollTop + track.clientHeight * 0.4; let k = 0; [...track.children].forEach((c, j) => { if (c.offsetTop <= mid) k = j; }); return clamp(k, 0, Math.max(0, n - 1)); }
+    return clamp(Math.round(track.scrollLeft / Math.max(1, track.clientWidth)), 0, Math.max(0, n - 1));
+  };
   function update() {
+    if (bh) { const max = Math.max(1, track.scrollHeight - track.clientHeight); fill.style.width = clamp(track.scrollTop / max, 0, 1) * 100 + '%'; pn.textContent = ''; return; }
     const i = idx(), cw = Math.max(1, track.clientWidth);
     pn.textContent = `${i + 1} / ${n}`;
     fill.style.width = n ? ((i + 1) / n) * 100 + '%' : '0';
     prev.disabled = i === 0; next.disabled = i >= n - 1;
     for (const s of track.children) s.style.setProperty('--p', clamp((s.offsetLeft - track.scrollLeft) / cw, -1, 1).toFixed(3));
   }
-  const go = (d) => track.scrollBy({ left: d * track.clientWidth, behavior: 'smooth' });
+  const go = (d) => {
+    if (!bh) return track.scrollBy({ left: d * track.clientWidth, behavior: 'smooth' });
+    const t = track.children[clamp(idx() + d, 0, track.children.length - 1)]; if (t) track.scrollTo({ top: t.offsetTop - 16, behavior: 'smooth' });
+  };
 
   function render(pr) {
     cur = pr;
     if (loader) loader.disconnect(); if (seen) seen.disconnect();
     track.innerHTML = '';
-    track.style.scrollBehavior = 'auto'; track.scrollLeft = 0; track.style.scrollBehavior = '';
+    bh = pr.layout !== 'slides'; box.classList.toggle('bh', bh);
+    if (pr.gap != null) box.style.setProperty('--bh-gap', typeof pr.gap === 'number' ? pr.gap + 'px' : pr.gap); else box.style.removeProperty('--bh-gap');
+    track.style.scrollBehavior = 'auto'; track.scrollLeft = 0; track.scrollTop = 0; track.style.scrollBehavior = '';
     dropText(title, pr.title); tags.textContent = [pr.tags, pr.year].filter(Boolean).join(' · ');
     loader = new IntersectionObserver((es) => es.forEach((e) => {
       if (!e.isIntersecting) return;
@@ -830,8 +839,8 @@ const Viewer = (() => {
         v.src = v.dataset.src;
       });
       loader.unobserve(e.target);
-    }), { root: track, rootMargin: '0px 150% 0px 150%' });
-    seen = new IntersectionObserver((es) => es.forEach((e) => e.target.classList.toggle('in', e.isIntersecting)), { root: track, threshold: 0.55 });
+    }), { root: track, rootMargin: bh ? '120% 0px 120% 0px' : '0px 150% 0px 150%' });
+    seen = new IntersectionObserver((es) => es.forEach((e) => { if (bh) { if (e.isIntersecting) e.target.classList.add('in'); } else e.target.classList.toggle('in', e.isIntersecting); }), { root: track, threshold: bh ? 0.01 : 0.55 });
     const slides = [];
     const inf = pr.info;
     if (inf && (inf.text || inf.role || inf.tools)) {
@@ -847,11 +856,35 @@ const Viewer = (() => {
         const cap = document.createElement('figcaption'); cap.textContent = inf.imageLabel || '';
         fig.append(im, cap);
         // en pantallas angostas no entran juntos: la imagen pasa a su propia lámina, justo después del texto
-        if (matchMedia('(max-width: 720px)').matches) { s.append(txt); slides.push(s); const sf = document.createElement('div'); sf.className = 'slide info-solo'; sf.append(fig); slides.push(sf); }
+        if (!bh && matchMedia('(max-width: 720px)').matches) { s.append(txt); slides.push(s); const sf = document.createElement('div'); sf.className = 'slide info-solo'; sf.append(fig); slides.push(sf); }
         else { s.classList.add('with-img'); s.append(txt, fig); slides.push(s); }
       } else slides.push(s);
     }
+    const pic = (src, alt, cls) => { const sk = document.createElement('i'); sk.className = 'sk'; const im = new Image(); im.alt = alt; im.decoding = 'async'; im.dataset.src = src; if (cls) im.className = cls; return [sk, im]; };
     (pr.slides || []).forEach((src, i) => {
+      // PLANTILLAS (ver el encabezado de projects.js)
+      // texto: { title: 'Título', text: 'Párrafo…' }
+      if (src && typeof src === 'object' && !Array.isArray(src) && (src.text || src.title) && !src.image && !src.grid && !src.full) {
+        const s = document.createElement('div'); s.className = 'slide bh-text';
+        if (src.title) { const h = document.createElement('h4'); h.textContent = src.title; s.append(h); }
+        if (src.text) String(src.text).split(/\n\s*\n/).forEach((t) => { const pp = document.createElement('p'); pp.textContent = t; s.append(pp); });
+        slides.push(s); return;
+      }
+      // grilla con columnas fijas: { grid: ['a.jpg', 'b.jpg', 'c.jpg'], cols: 3 }
+      if (src && src.grid) {
+        const s = document.createElement('div'); s.className = 'slide row grid'; const cols = src.cols || Math.min(src.grid.length, 3);
+        s.style.setProperty('--cols', cols); s.style.setProperty('--rows', Math.ceil(src.grid.length / 2));
+        src.grid.forEach((g, gi) => { const ri = document.createElement('span'); ri.className = 'ri'; ri.append(...pic(g, `${pr.title} — ${i + 1}.${gi + 1}`)); s.append(ri); });
+        if (src.caption) { const c = document.createElement('p'); c.className = 'bh-cap'; c.textContent = src.caption; s.append(c); }
+        slides.push(s); return;
+      }
+      // imagen con epígrafe: { image: 'a.jpg', caption: 'Texto' } · imagen a todo el ancho de la pantalla: { full: 'a.jpg' }
+      if (src && (src.image || src.full)) {
+        const s = document.createElement('div'); s.className = 'slide' + (src.full ? ' bh-full' : '');
+        s.append(...pic(src.image || src.full, src.caption || `${pr.title} — ${i + 1}`));
+        if (src.caption) { const c = document.createElement('p'); c.className = 'bh-cap'; c.textContent = src.caption; s.append(c); }
+        slides.push(s); return;
+      }
       // un video propio (.mp4): se reproduce solo, sin sonido y en loop, como un GIF pero más liviano
       if (typeof src === 'string' && /\.mp4($|\?)/i.test(src)) {
         const s = document.createElement('div'); s.className = 'slide';
@@ -879,7 +912,7 @@ const Viewer = (() => {
       const group = Array.isArray(src) ? src : [src];
       const isGif = group.some((g) => /\.gif($|\?)/i.test(g));
       const s = document.createElement('div'); s.className = group.length > 1 ? 'slide row' : (isGif ? 'slide gif' : 'slide');
-      if (group.length > 1) s.style.setProperty('--rows', Math.ceil(group.length / 2));
+      if (group.length > 1) { s.style.setProperty('--rows', Math.ceil(group.length / 2)); s.style.setProperty('--cols', group.length); }
       if (group.length > 1) {
         group.forEach((g, gi) => {
           const ri = document.createElement('span'); ri.className = 'ri';
@@ -897,6 +930,18 @@ const Viewer = (() => {
       }
       slides.push(s);
     });
+    if (bh) {
+      const list = window.PORTFOLIO.projects.filter((x) => !x.hidden), nx = list[(list.indexOf(pr) + 1) % list.length];
+      if (nx && nx !== pr) {
+        const s = document.createElement('div'); s.className = 'slide bh-next';
+        const b = document.createElement('button'); b.type = 'button'; b.style.setProperty('--c', nx.color || '#1700fe');
+        b.innerHTML = '<span class="bh-next-k">Siguiente proyecto →</span><strong></strong><em></em>';
+        $('strong', b).textContent = nx.title; $('em', b).textContent = nx.tags || '';
+        if (nx.cover) { const [sk, im] = pic(nx.cover, nx.title, 'bh-next-cover'); b.prepend(im); }
+        b.addEventListener('click', () => { render(nx); });
+        s.append(b); slides.push(s);
+      }
+    }
     n = slides.length;
     slides.forEach((s) => { track.appendChild(s); loader.observe(s); seen.observe(s); });
     update();
@@ -919,13 +964,14 @@ const Viewer = (() => {
   track.addEventListener('scroll', update, { passive: true });
   track.addEventListener('click', (e) => {
     const im = e.target.closest && e.target.closest('.slide img');
-    if (!im || !im.dataset.src) return;
-    const all = $$('.slide img', track).filter((x) => x.dataset.src);
+    if (!im || !im.dataset.src || im.classList.contains('bh-next-cover')) return;
+    const all = $$('.slide img', track).filter((x) => x.dataset.src && !x.classList.contains('bh-next-cover'));
     Zoom.open(all.map((x) => ({ src: x.dataset.src, alt: x.alt })), all.indexOf(im));
   });
   $('#pvClose').addEventListener('click', close);
   prev.addEventListener('click', () => go(-1)); next.addEventListener('click', () => go(1));
   track.addEventListener('wheel', (e) => {
+    if (bh) return;
     const d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
     if (Math.abs(d) < 8) return;
     e.preventDefault();

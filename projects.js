@@ -9,9 +9,23 @@
      year   → año (opcional)
      color  → color del proyecto (hex): tiñe el brillo y la barra de progreso
      cover  → portada, vertical 3:4 (por ejemplo 900×1200)
-     slides → las imágenes del proyecto, en orden (la primera es la portada grande)
-              también puede ir un video propio ('img/<slug>/video.mp4', se reproduce solo y en loop) un diseño embebido { embed: '<url del iframe>', ratio: '16/9' } o un reel o un post de Instagram: { reel: 'https://www.instagram.com/reel/…/' } o { ig: 'https://www.instagram.com/p/…/' }
-     info   → (opcional) una lámina de texto al comienzo del proyecto:
+     slides → el contenido del proyecto, de arriba hacia abajo (se ve como en Behance: se scrollea).
+              Cada elemento es una PLANTILLA. Copiá la que necesites:
+
+                'img/<slug>/01.jpg'                                  → una imagen (se ve entera)
+                ['img/<slug>/02.jpg', 'img/<slug>/03.jpg']           → fila: 2, 3 o 4 imágenes lado a lado
+                { grid: ['a.jpg', 'b.jpg', 'c.jpg', 'd.jpg', 'e.jpg', 'f.jpg'], cols: 3 }
+                                                                     → grilla con la cantidad de columnas que quieras
+                { title: 'El proceso', text: 'Un párrafo…' }        → bloque de texto (dejá una línea vacía para otro párrafo)
+                { image: 'img/<slug>/04.jpg', caption: 'Epígrafe' }  → imagen con epígrafe
+                { full: 'img/<slug>/05.jpg' }                        → imagen a todo el ancho de la pantalla, de borde a borde
+                'img/<slug>/video.mp4'                               → video propio (se reproduce solo, sin sonido y en loop)
+                { embed: '<url del iframe>', ratio: '16/9' }        → diseño o video embebido (Adobe Express, Drive: ratio '9/16' si es vertical)
+                { reel: 'https://www.instagram.com/reel/…/' }        → reel de Instagram  ·  { ig: 'https://www.instagram.com/p/…/' } → post
+
+     gap    → (opcional) espacio entre bloques: 0 para que queden pegados como en muchos casos de Behance, o un número en px
+     layout → (opcional) 'slides' para ver ese proyecto con láminas horizontales, como antes
+     info   → (opcional) el texto del comienzo del proyecto:
               { text: 'Qué era, qué hiciste, cómo lo pensaste…', product: 'Qué es el producto (opcional)', image: 'img/<slug>/moodboard.jpg (opcional, va al lado del texto)', imageLabel: 'Moodboard', role: 'Diseño e ilustración', tools: 'Illustrator · Photoshop' }
 
    Para sumar un proyecto: copiá un bloque, cambiá los datos y guardá tus imágenes en img/<slug>/.
