@@ -93,72 +93,6 @@ function brushWipe(swap, o = {}) {
   })();
 })();
 
-/* ============================================================
-   Emojis con gravedad: caen, rebotan, chocan entre ellos y el cursor los empuja
-   ============================================================ */
-const EMOJIS = ['star', 'sparkle', 'bolt', 'heart', 'smile', 'cool', 'book'].map((n) => `img/sobre-mi/emoji-${n}.svg`);
-function EmojiPhys(layer, o = {}) {
-  const count = o.count || 6, min = o.min || 50, max = o.max || 90, delay = o.delay || 0, bounce = o.bounce ?? 0.55;
-  let items = [], raf = 0, W = 0, H = 0, last = 0, t0 = 0, ptr = null, released = false;
-  window.addEventListener('pointermove', (e) => { ptr = { x: e.clientX, y: e.clientY }; }, { passive: true });
-  function spawn() {
-    W = layer.clientWidth; H = layer.clientHeight;
-    layer.innerHTML = ''; items = [];
-    for (let i = 0; i < count; i++) {
-      const pool = o.pool || EMOJIS;
-      const el = new Image(); el.src = pool[(i + (o.offset || 0)) % pool.length]; el.alt = ''; el.draggable = false;
-      const s = min + Math.random() * (max - min); el.style.width = s + 'px'; el.style.opacity = '0';
-      layer.appendChild(el);
-      items.push({ el, s, x: s + Math.random() * Math.max(1, W - 2 * s), y: -s * 2, vx: (Math.random() - 0.5) * 3, vy: 0, rot: Math.random() * 40 - 20, vr: (Math.random() - 0.5) * 5, t: delay + i * 260 });
-    }
-  }
-  function step(now) {
-    const dt = Math.min(2, (now - (last || now)) / 16.67); last = now;
-    const el0 = now - t0, lb = layer.getBoundingClientRect();
-    for (const it of items) {
-      if (el0 < it.t) continue;
-      if (it.el.style.opacity === '0') it.el.style.opacity = '1';
-      // la gravedad apunta un poco hacia donde está el cursor (mayormente hacia abajo)
-      const G = o.g ?? 0.42; let gx = 0, gy = G; if (released) gy = 1.2;
-      if (o.attract && ptr) { const cx = ptr.x - lb.left - it.x, cy = ptr.y - lb.top - it.y, cd = Math.hypot(cx, cy) || 1, w = Math.min(1, cd / 240) * 0.45; gx = (cx / cd) * 0.5 * w; gy = G * (1 - w) + (cy / cd) * 0.5 * w; }
-      it.vx += gx * dt; it.vy += gy * dt; it.x += it.vx * dt; it.y += it.vy * dt; it.rot += it.vr * dt;
-      const floor = H - it.s * 0.5 - 8;
-      if (it.y > floor && !released) { it.y = floor; if (Math.abs(it.vy) > 2.2) { it.vy = -it.vy * bounce; it.vr += (Math.random() - 0.5) * 4; } else it.vy = 0; it.vx *= Math.pow(0.92, dt); it.vr *= Math.pow(0.9, dt); }
-      const half = it.s * 0.5;
-      if (it.x < half) { it.x = half; it.vx = Math.abs(it.vx) * 0.6; } if (it.x > W - half) { it.x = W - half; it.vx = -Math.abs(it.vx) * 0.6; }
-      if (ptr && !o.attract) { const dx = it.x - (ptr.x - lb.left), dy = it.y - (ptr.y - lb.top), d = Math.hypot(dx, dy) || 1, R = it.s * 0.9 + 60; if (d < R) { const f = (1 - d / R) * 1.6 * dt; it.vx += (dx / d) * f; it.vy -= Math.abs(dy / d) * f * 0.6; } }
-    }
-    for (let k = 0; k < 2; k++) for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) {
-      const a = items[i], b = items[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01, m = (a.s + b.s) * 0.4;
-      if (d < m) { const p = (m - d) / 2, nx = dx / d, ny = dy / d; a.x -= nx * p; a.y -= ny * p; b.x += nx * p; b.y += ny * p; a.vx -= nx * 0.2; b.vx += nx * 0.2; }
-    }
-    for (const it of items) it.el.style.transform = `translate(${(it.x - it.s / 2).toFixed(1)}px, ${(it.y - it.s / 2).toFixed(1)}px) rotate(${it.rot.toFixed(1)}deg)`;
-    raf = requestAnimationFrame(step);
-  }
-  return {
-    release() { released = true; },
-    start() { released = false; cancelAnimationFrame(raf); spawn(); last = 0; t0 = performance.now(); raf = requestAnimationFrame(step); },
-    stop() { cancelAnimationFrame(raf); },
-  };
-}
-
-/* ============================================================
-   Cursor con compañero: un emojito chico lo sigue con inercia y cambia según la sección
-   ============================================================ */
-const CursorEmoji = (() => {
-  const el = new Image(); el.className = 'cursor-emoji'; el.alt = ''; el.setAttribute('aria-hidden', 'true'); el.src = EMOJIS[1];
-  document.body.appendChild(el);
-  let x = 0, y = 0, ex = 0, ey = 0, vx = 0, vy = 0, on = false;
-  window.addEventListener('pointermove', (e) => { if (e.pointerType === 'touch') return; x = e.clientX; y = e.clientY; if (!on) { on = true; ex = x; ey = y; el.classList.add('on'); } }, { passive: true });
-  document.documentElement.addEventListener('mouseleave', () => { on = false; el.classList.remove('on'); });
-  (function loop() {
-    vx += (x + 20 - ex) * 0.06; vy += (y + 20 - ey) * 0.06; vx *= 0.82; vy *= 0.82; ex += vx; ey += vy;
-    el.style.transform = `translate3d(${ex.toFixed(1)}px, ${ey.toFixed(1)}px, 0) rotate(${(vx * 2.5).toFixed(1)}deg)`;
-    requestAnimationFrame(loop);
-  })();
-  return { set(name) { const s = `img/sobre-mi/emoji-${name}.svg`; if (!el.src.endsWith(s)) { el.src = s; el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop'); } } };
-})();
-
 // la luz del cursor recorre el botón o la tarjeta que se está por elegir
 document.addEventListener('pointermove', (e) => {
   const f = e.target.closest && e.target.closest('.chip, .close, .pnav, .pcard');
@@ -199,9 +133,9 @@ const Site = (() => {
   render();
   // Sobre mí: los emojis empiezan a flotar cuando la sección aparece en pantalla
   const about = $('#sobre-mi');
-  if (about && 'IntersectionObserver' in window) new IntersectionObserver((es) => es.forEach((e) => {
-    if (e.isIntersecting) { paintIn($$('[data-paint]', about), 100, 120); Gravity.start(); } else Gravity.stop();
-  }), { threshold: 0.2 }).observe(about);
+  if (about && 'IntersectionObserver' in window) { const obs = new IntersectionObserver((es) => es.forEach((e) => {
+    if (e.isIntersecting) { paintIn($$('[data-paint]', about), 100, 120); obs.disconnect(); }
+  }), { threshold: 0.2 }); obs.observe(about); }
   // link directo a un proyecto: …/#abu abre abu
   const fromHash = () => { const slug = decodeURIComponent(location.hash.slice(1)); const p = PROJECTS.find((x) => x.slug === slug); if (p && !Viewer.isOpen()) Viewer.open(p); };
   addEventListener('hashchange', fromHash);
@@ -374,13 +308,13 @@ const Viewer = (() => {
     if (wiping || isOpen) return;
     loadBar();
     const c = pr.color || '#1700fe';
-    brushWipe(() => { CursorEmoji.set('bolt'); isOpen = true; document.body.classList.add('viewing'); track.innerHTML = ''; box.classList.add('open', 'pre'); box.setAttribute('aria-hidden', 'false'); },
+    brushWipe(() => { isOpen = true; document.body.classList.add('viewing'); track.innerHTML = ''; box.classList.add('open', 'pre'); box.setAttribute('aria-hidden', 'false'); },
       { colors: [c, shade(c, 0.07), shade(c, -0.08)], dur: 460, stag: 36, hold: 120 }).then(() => { if (!isOpen) return; render(pr); box.classList.remove('pre'); track.focus({ preventScroll: true }); });
   }
   function close() {
     if (wiping || !isOpen) return;
     const c = (cur && cur.color) || '#1700fe';
-    brushWipe(() => { CursorEmoji.set('star'); isOpen = false; document.body.classList.remove('viewing'); box.classList.remove('open'); box.setAttribute('aria-hidden', 'true'); history.replaceState(null, '', '#trabajos'); },
+    brushWipe(() => { isOpen = false; document.body.classList.remove('viewing'); box.classList.remove('open'); box.setAttribute('aria-hidden', 'true'); history.replaceState(null, '', '#trabajos'); },
       { colors: [c, shade(c, 0.07), shade(c, -0.08)], dur: 400, stag: 30, hold: 100 });
   }
 
@@ -446,76 +380,6 @@ const Zoom = (() => {
   }, { passive: false });
   addEventListener('keydown', (e) => { if (!open) return; if (e.key === 'ArrowRight') show(i + 1); if (e.key === 'ArrowLeft') show(i - 1); });
   return { open: openZ, close, isOpen: () => open };
-})();
-
-/* ============================================================
-   6 · Sobre mí: los emojis y el sticker flotan con gravedad, el cursor los empuja y se pueden agarrar
-   ============================================================ */
-const PNGS = [
-  'img/sobre-mi/emoji-smile.svg', 'img/sobre-mi/emoji-heart.svg', 'img/sobre-mi/emoji-star.svg',
-  'img/sobre-mi/emoji-bolt.svg', 'img/sobre-mi/emoji-cool.svg', 'img/sobre-mi/emoji-sparkle.svg',
-];
-const Gravity = (() => {
-  const play = $('#play');
-  let items = [], raf = 0, W = 0, H = 0, ptr = null, drag = null;
-  const measure = () => { W = play.clientWidth; H = play.clientHeight; };
-
-  function build() {
-    const STICKER = 'img/sobre-mi/passion-sticker.svg';
-    const base = clamp(Math.min(W, H) * 0.14, 56, 100);
-    items = [...PNGS, STICKER].map((src) => {
-      const el = new Image(), big = src === STICKER;
-      el.className = big ? 'it sticker' : 'it emoji'; el.src = src; el.alt = ''; el.draggable = false;
-      const s = big ? clamp(Math.min(W * 0.8, H * 1.1), 200, 560) : base * (0.85 + Math.random() * 0.4);
-      const it = { ph: Math.random() * 6.28, fx: 0.00025 + Math.random() * 0.0003, fy: 0.0003 + Math.random() * 0.00035, el, w: s, h: s, r: s * 0.45, x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0, rot: 0 };
-      el.style.width = s + 'px';
-      el.onload = () => { it.h = s * el.naturalHeight / el.naturalWidth; it.r = Math.max(it.w, it.h) * 0.34; };
-      el.__it = it; play.appendChild(el);
-      return it;
-    });
-  }
-
-  function step() {
-    const tx = ptr ? ptr.x : W / 2, ty = ptr ? ptr.y : H / 2, now = performance.now();
-    if (!W || !H) measure();
-    for (const it of items) {
-      if (it === drag) { it.x += (tx - it.x) * 0.4; it.y += (ty - it.y) * 0.4; it.vx = it.vy = 0; continue; }
-      const big = it.el.classList.contains('sticker'), amp = big ? 0.24 : 0.42;
-      const ax = W / 2 + Math.cos(now * it.fx + it.ph) * W * amp, ay = H / 2 + Math.sin(now * it.fy + it.ph * 1.7) * H * (big ? 0.2 : 0.38);
-      it.vx = (it.vx + (ax - it.x) * 0.010 + (Math.random() - 0.5) * 0.06) * 0.9;
-      it.vy = (it.vy + (ay - it.y) * 0.010 + (Math.random() - 0.5) * 0.06) * 0.9;
-      if (ptr) { const dx = it.x - ptr.x, dy = it.y - ptr.y, d = Math.hypot(dx, dy) || 0.01, R = 150 + it.r; if (d < R) { const f = (1 - d / R) * 1.4; it.vx += (dx / d) * f; it.vy += (dy / d) * f; } }
-      it.x += it.vx; it.y += it.vy;
-    }
-    for (let k = 0; k < 3; k++) for (let i = 0; i < items.length; i++) for (let j = i + 1; j < items.length; j++) {
-      const a = items[i], b = items[j], dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01, min = a.r + b.r;
-      if (d < min) { const push = (min - d) / 2, nx = dx / d, ny = dy / d; if (a !== drag) { a.x -= nx * push; a.y -= ny * push; } if (b !== drag) { b.x += nx * push; b.y += ny * push; } }
-    }
-    for (const it of items) {
-      const whole = it.el.classList.contains('sticker'), mx = whole ? it.w / 2 : it.r * 0.6, my = whole ? it.h / 2 : it.r * 0.6;
-      it.x = clamp(it.x, mx, Math.max(mx, W - mx)); it.y = clamp(it.y, my, Math.max(my, H - my));
-      it.rot += ((whole ? 0 : clamp(it.vx * 4, -30, 30)) - it.rot) * 0.1;
-      it.el.style.transform = `translate(${it.x - it.w / 2}px, ${it.y - it.h / 2}px) rotate(${it.rot}deg)`;
-    }
-    raf = requestAnimationFrame(step);
-  }
-
-  const local = (e) => { const b = play.getBoundingClientRect(); return { x: e.clientX - b.left, y: e.clientY - b.top }; };
-  play.addEventListener('pointermove', (e) => { ptr = local(e); });
-  play.addEventListener('pointerleave', () => { if (!drag) ptr = null; });
-  play.addEventListener('pointerdown', (e) => { ptr = local(e); const el = e.target.closest('.it'); if (el) { drag = el.__it; play.classList.add('grabbing'); play.setPointerCapture(e.pointerId); } });
-  const release = (e) => { drag = null; play.classList.remove('grabbing'); if (e.pointerType === 'touch') ptr = null; };
-  play.addEventListener('pointerup', release); play.addEventListener('pointercancel', release);
-  addEventListener('resize', measure);
-
-  return {
-    start() {
-      measure(); if (!items.length) build();
-      $$('.sticker', play).forEach((el) => { el.classList.remove('drop'); void el.offsetWidth; el.classList.add('drop'); });
-      cancelAnimationFrame(raf); raf = requestAnimationFrame(step);
-    },
-    stop() { cancelAnimationFrame(raf); },
-  };
 })();
 
 /* ============================================================
