@@ -1013,3 +1013,81 @@ body.wall .stage { align-items: flex-end; }
   .bh-next button { grid-template-columns: 1fr; }
   .bh-next .bh-next-cover { grid-row: auto; width: 100%; aspect-ratio: 16 / 9; margin-bottom: var(--s3); }
 }
+
+/* ============================================================
+   INICIO DE UNA SOLA PÁGINA — sin entrada ni carpetas: los proyectos son lo primero que se ve.
+   ============================================================ */
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--site-head) + 12px); }
+:root { --site-head: 68px; }
+body { overflow-x: hidden; overflow-y: auto; }
+body.viewing { overflow: hidden; }
+.skip { position: fixed; left: var(--pad); top: -60px; z-index: 100; padding: 10px 16px; border-radius: 999px; background: var(--ink); color: #fff; font: 500 var(--t-small)/1 var(--font); transition: top .2s; }
+.skip:focus { top: 12px; }
+
+/* encabezado */
+.site-head { position: sticky; top: 0; z-index: 40; height: var(--site-head); padding: 0 var(--pad); display: flex; align-items: center; justify-content: space-between; gap: var(--s4); background: color-mix(in srgb, var(--paper) 86%, transparent); backdrop-filter: blur(14px) saturate(1.2); -webkit-backdrop-filter: blur(14px) saturate(1.2); border-bottom: 1px solid var(--line); }
+.brand { display: flex; align-items: baseline; gap: 10px; white-space: nowrap; }
+.brand strong { font: 600 17px/1 var(--display); letter-spacing: -.01em; }
+.brand span { font: 500 var(--t-small)/1 var(--font); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
+.site-nav { display: flex; align-items: center; gap: clamp(10px, 2vw, 28px); font: 500 14px/1 var(--font); }
+.site-nav a { position: relative; padding: 6px 0; color: var(--ink-2); transition: color .25s; }
+.site-nav a::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--blue); scale: 0 1; transform-origin: left; transition: scale .35s var(--ease); }
+.site-nav a:hover { color: var(--ink); } .site-nav a:hover::after { scale: 1 1; }
+.site-nav .nav-cta { padding: 9px 16px; border-radius: 999px; background: var(--blue); color: #fff; }
+.site-nav .nav-cta::after { display: none; }
+.site-nav .nav-cta:hover { color: #fff; background: var(--ink); }
+
+/* títulos de sección */
+.sec-title { margin: 0; font: 500 clamp(30px, 4.4vw, 60px)/1 var(--display); letter-spacing: -.035em; }
+.work-count { font: 500 var(--t-small)/1 var(--font); letter-spacing: .12em; color: var(--mute); vertical-align: super; margin-left: 6px; }
+
+/* proyectos: la grilla protagonista */
+.work-sec { padding: clamp(28px, 5vh, 56px) var(--pad) clamp(48px, 9vh, 110px); }
+.work-head { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: var(--s3) var(--s4); margin-bottom: clamp(20px, 3.5vh, 40px); }
+.work-sec .filters { display: flex; gap: var(--s2); flex-wrap: wrap; }
+.grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, clamp(260px, 27vw, 420px)), 1fr)); gap: clamp(28px, 3.4vw, 52px) clamp(16px, 2.2vw, 32px); }
+.grid li { animation: cardIn .8s var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+@keyframes cardIn { from { opacity: 0; translate: 0 26px; } }
+.pcard { all: unset; box-sizing: border-box; display: grid; gap: 14px; width: 100%; cursor: pointer; }
+.pcard-img { position: relative; display: block; overflow: hidden; aspect-ratio: 3 / 4; border-radius: 6px; background: var(--paper-2); box-shadow: 0 1px 0 rgba(255, 255, 255, .6) inset, 0 24px 40px -30px rgba(16, 16, 40, .45); transition: box-shadow .5s var(--ease), translate .5s var(--ease); }
+.pcard-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0; scale: 1.02; transition: opacity .6s, scale .9s var(--ease); }
+.pcard-img img.loaded { opacity: 1; scale: 1; }
+.pcard-img::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 40%), rgba(255, 255, 255, .28), transparent 55%); opacity: 0; transition: opacity .4s; pointer-events: none; }
+.pcard:hover .pcard-img, .pcard:focus-visible .pcard-img { translate: 0 -6px; box-shadow: 0 34px 60px -30px var(--c), 0 14px 28px -18px rgba(16, 16, 40, .35); }
+.pcard:hover .pcard-img img, .pcard:focus-visible .pcard-img img { scale: 1.035; }
+.pcard:hover .pcard-img::after { opacity: 1; }
+.pcard-meta { display: grid; gap: 6px; }
+.pcard-meta strong { font: 500 clamp(19px, 1.6vw, 24px)/1.15 var(--display); letter-spacing: -.02em; transition: color .3s; }
+.pcard:hover .pcard-meta strong { color: var(--c); }
+.pcard-meta em { font: 500 var(--t-small)/1.4 var(--font); font-style: normal; letter-spacing: .08em; text-transform: uppercase; color: var(--mute); }
+.pcard:focus-visible { outline: none; } .pcard:focus-visible .pcard-img { outline: 2px solid var(--blue); outline-offset: 4px; }
+
+/* sobre mí, como sección de la página */
+.about-sec { padding: clamp(48px, 9vh, 110px) var(--pad); border-top: 1px solid var(--line); }
+.about-sec .about { position: static; inset: auto; margin-top: clamp(20px, 4vh, 44px); padding: 0; min-height: min(70vh, 640px); }
+.about-sec .play { min-height: 360px; }
+
+/* pie */
+.site-foot { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2) clamp(16px, 3vw, 36px); padding: 28px var(--pad) 36px; border-top: 1px solid var(--line); font: 500 14px/1.4 var(--font); color: var(--mute); }
+.site-foot a { color: var(--ink-2); text-decoration: underline; text-decoration-color: var(--neon); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+.site-foot a:hover { text-decoration-color: var(--blue); }
+.site-foot span { margin-left: auto; }
+
+@media (max-width: 720px) {
+  :root { --site-head: 58px; }
+  .brand span { display: none; }
+  .site-nav { gap: 14px; font-size: 13px; }
+  .site-nav a[target] { display: none; }          /* Behance y LinkedIn quedan en el pie y en Sobre mí */
+  .site-nav .nav-cta { padding: 8px 12px; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 12px; }
+  .pcard { gap: 10px; }
+  .pcard-meta strong { font-size: 16px; }
+  .pcard-meta em { font-size: 10px; }
+  .about-sec .about { display: grid; grid-template-columns: 1fr; min-height: 0; }
+  .about-sec .play { min-height: 300px; }
+  .site-foot span { margin-left: 0; width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .grid li { animation: none; } }
+.site-head a { text-decoration: none; white-space: nowrap; }
+@media (max-width: 720px) { .brand strong { font-size: 15px; } .site-nav { gap: 12px; } .site-nav .nav-cta { padding: 7px 11px; } }
+@media (max-width: 430px) { .site-nav a[href="#trabajos"] { display: none; } }
