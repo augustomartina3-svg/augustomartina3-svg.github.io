@@ -179,6 +179,7 @@ const Viewer = (() => {
     track.innerHTML = '';
     bh = pr.layout !== 'slides'; box.classList.toggle('bh', bh);
     if (pr.gap != null) box.style.setProperty('--bh-gap', typeof pr.gap === 'number' ? pr.gap + 'px' : pr.gap); else box.style.removeProperty('--bh-gap');
+    box.style.setProperty('--pc', shade(pr.color || '#1a00ff', -0.12));   // color del proyecto (un poco más oscuro, para que se lea sobre el papel)
     track.style.scrollBehavior = 'auto'; track.scrollLeft = 0; track.scrollTop = 0; track.style.scrollBehavior = '';
     dropText(title, pr.title); tags.textContent = [pr.tags, pr.year].filter(Boolean).join(' · ');
     loader = new IntersectionObserver((es) => es.forEach((e) => {
@@ -220,8 +221,18 @@ const Viewer = (() => {
     const pic = (src, alt, cls) => { const sk = document.createElement('i'); sk.className = 'sk'; const im = new Image(); im.alt = alt; im.decoding = 'async'; im.dataset.src = src; if (cls) im.className = cls; return [sk, im]; };
     (pr.slides || []).forEach((src, i) => {
       // PLANTILLAS (ver el encabezado de projects.js)
+      // resultados: { stats: [['11.038', 'seguidores'], …], title: 'Resultados', note: 'Fuente…' }
+      if (src && src.stats) {
+        const s = document.createElement('div'); s.className = 'slide bh-stats';
+        if (src.title) { const h = document.createElement('h4'); h.textContent = src.title; s.append(h); }
+        const ul = document.createElement('ul');
+        src.stats.forEach(([num, label]) => { const li = document.createElement('li'); const b = document.createElement('strong'); b.textContent = num; const sp = document.createElement('span'); sp.textContent = label; li.append(b, sp); ul.append(li); });
+        s.append(ul);
+        if (src.note) { const c = document.createElement('p'); c.className = 'bh-cap'; c.textContent = src.note; s.append(c); }
+        slides.push(s); return;
+      }
       // texto: { title: 'Título', text: 'Párrafo…' }
-      if (src && typeof src === 'object' && !Array.isArray(src) && (src.text || src.title) && !src.image && !src.grid && !src.full) {
+      if (src && typeof src === 'object' && !Array.isArray(src) && (src.text || src.title) && !src.image && !src.grid && !src.full && !src.stats) {
         const s = document.createElement('div'); s.className = 'slide bh-text';
         if (src.title) { const h = document.createElement('h4'); h.textContent = src.title; s.append(h); }
         if (src.text) String(src.text).split(/\n\s*\n/).forEach((t) => { const pp = document.createElement('p'); pp.textContent = t; s.append(pp); });
